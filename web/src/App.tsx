@@ -17,6 +17,7 @@ import { SetResults } from './components/SetResults'
 import type { CellState } from './components/Navigator'
 import { SetReview } from './components/SetReview'
 import { sample } from './lib/draw'
+import { arrange, type Order } from './lib/order'
 import { setSeconds, formatClock as formatCountdown } from './lib/pacing'
 import { formatClock, useQuestionTimer } from './lib/useTimer'
 import * as sync from './lib/sync'
@@ -150,15 +151,25 @@ export default function App() {
   // A pull from another device changes the same numbers an answer does.
   useEffect(() => sync.subscribe(() => setDataVersion(sync.getDataVersion())), [])
 
-  useEffect(() => {
+  /** Home list order; `seed` changes each time Random is picked, so it reshuffles. */
+  const [order, setOrder] = useState<Order>('mixed')
+  const [seed, setSeed] = useState('')
+
+  const loadList = useCallback(() => {
     let stale = false
     setListLoading(true)
     api.questionSet(filters)
-      .then((d) => { if (!stale) { setItems(d.questions); setIndex(0) } })
+      .then((d) => { if (!stale) { setItems(arrange(d.questions, order, seed)); setIndex(0) } })
       .catch((e: Error) => !stale && setError(e.message))
       .finally(() => { if (!stale) setListLoading(false) })
     return () => { stale = true }
-  }, [filters])
+  }, [filters, order, seed])
+
+  useEffect(loadList, [loadList])
+
+  // Landing back on Home reloads the list: answers since then change its status
+  // marks, and opening one question or a set replaced `items` with just those.
+  useEffect(() => { if (view === 'home') return loadList() }, [view, dataVersion])
 
   useEffect(() => {
     if (!practising || !current) { setQuestion(null); return }
@@ -599,8 +610,14 @@ export default function App() {
         </nav>
 
         {view === 'home' ? (
-          <Home taxonomy={taxonomy} stats={stats} value={filters} count={items.length}
+          <Home taxonomy={taxonomy} stats={stats} value={filters} items={items}
                 loading={listLoading} onChange={setFilters}
+                onOpen={(i) => { setIndex(i); setView('practice') }}
+                order={order}
+                onOrder={(next) => {
+                  setOrder(next)
+                  if (next === 'random') setSeed(crypto.randomUUID())
+                }}
                 activeSets={activeSets}
                 onResume={openSet}
                 onAbandon={abandonSet}
