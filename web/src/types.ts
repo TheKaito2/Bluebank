@@ -23,6 +23,8 @@ export interface Question {
   options: Option[] | null
   key_recovered: boolean
   source_path: string
+  /** College Board's short id (e.g. 'f8befe75'), the one videos quote. */
+  cb_id?: string | null
 }
 
 /**
@@ -44,6 +46,7 @@ export interface Mistake {
 /** One row of the working set, enough to draw the navigator. */
 export interface SetItem {
   id: string
+  cb_id?: string | null
   section: Section
   domain: string
   domain_name: string

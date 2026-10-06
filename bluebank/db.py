@@ -31,7 +31,10 @@ CREATE TABLE IF NOT EXISTS questions (
   -- Also on an official full-length practice test. College Board's own bank
   -- calls these "active questions" in its UI and "live items" in its code, and
   -- offers the same filter so you do not spoil a test you have not sat.
-  live           INTEGER NOT NULL DEFAULT 0
+  live           INTEGER NOT NULL DEFAULT 0,
+  -- College Board's short question id (e.g. 'f8befe75'), the one their bank
+  -- shows and the one videos and forums quote. Null for imported questions.
+  cb_id          TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_q_section    ON questions(section, retired);
@@ -212,6 +215,12 @@ def connect(path=None):
     if not any(c["name"] == "live"
                for c in conn.execute("PRAGMA table_info(questions)")):
         conn.execute("ALTER TABLE questions ADD COLUMN live INTEGER NOT NULL DEFAULT 0")
+        conn.commit()
+
+    # Same story for `cb_id`: null until the next `normalize` fills it in.
+    if not any(c["name"] == "cb_id"
+               for c in conn.execute("PRAGMA table_info(questions)")):
+        conn.execute("ALTER TABLE questions ADD COLUMN cb_id TEXT")
         conn.commit()
 
     if migrating:

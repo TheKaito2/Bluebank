@@ -374,8 +374,8 @@ def normalize(db_path=None):
             INSERT INTO questions (id, source_path, section, domain, domain_name,
                 skill, skill_name, difficulty, band, type, stimulus_html, stem_html,
                 options_json, correct_json, rationale_html, explanations_json,
-                key_recovered, flags_json, update_date, retired, live)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?)
+                key_recovered, flags_json, update_date, retired, live, cb_id)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?,?)
             ON CONFLICT(id) DO UPDATE SET
                 source_path=excluded.source_path, section=excluded.section,
                 domain=excluded.domain, domain_name=excluded.domain_name,
@@ -387,7 +387,8 @@ def normalize(db_path=None):
                 rationale_html=excluded.rationale_html,
                 explanations_json=excluded.explanations_json,
                 key_recovered=excluded.key_recovered, flags_json=excluded.flags_json,
-                update_date=excluded.update_date, retired=0, live=excluded.live
+                update_date=excluded.update_date, retired=0, live=excluded.live,
+                cb_id=excluded.cb_id
         """, (
             stub["_id"], stub["_path"], stub["_section"],
             stub.get("primary_class_cd") or "",
@@ -400,7 +401,7 @@ def normalize(db_path=None):
             json.dumps(explanations) if explanations else None,
             norm["key_recovered"],
             json.dumps(norm["flags"]) if norm["flags"] else None,
-            stub["updateDate"], live_flag,
+            stub["updateDate"], live_flag, stub.get("questionId"),
         ))
         seen.add(stub["_id"])
         written += 1

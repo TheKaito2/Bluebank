@@ -255,6 +255,7 @@ function toSetItem(stub: Stub, c: Cache): SetItem {
   const last = list.length ? list[list.length - 1] : null
   return {
     id: stub._id,
+    cb_id: stub.questionId ?? null,
     section: stub._section,
     domain: stub.primary_class_cd ?? '',
     domain_name: stub.primary_class_cd_desc ?? '',

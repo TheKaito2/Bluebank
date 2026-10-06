@@ -185,6 +185,7 @@ export function normaliseQuestion(stub: Stub, raw: Raw): StoredQuestion {
   return {
     id: stub._id,
     source_path: stub._path,
+    cb_id: stub.questionId ?? null,
     section: stub._section,
     domain: stub.primary_class_cd ?? '',
     domain_name: stub.primary_class_cd_desc ?? '',

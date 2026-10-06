@@ -180,6 +180,10 @@ export function QuestionView(props: Props) {
 
         <span className="q-head-spacer" />
 
+        {/* College Board's own id: the string videos and forums quote, so you
+            can look up a walkthrough. */}
+        {question.cb_id ? <QuestionId id={question.cb_id} /> : null}
+
         {/* College Board's own rating for this question. Useful mid-set: a slow
             answer on a Hard one reads differently from a slow answer on an
             Easy one. */}
@@ -304,5 +308,25 @@ export function QuestionView(props: Props) {
         </div>
       ) : null}
     </div>
+  )
+}
+
+function QuestionId({ id }: { id: string }) {
+  const [copied, setCopied] = useState(false)
+  const search = `https://www.youtube.com/results?search_query=${encodeURIComponent(`SAT question ${id}`)}`
+  return (
+    <span className="q-id">
+      <button className="q-id-copy" title="Copy question ID"
+              onClick={() => {
+                navigator.clipboard?.writeText(id).then(() => {
+                  setCopied(true)
+                  setTimeout(() => setCopied(false), 1400)
+                }).catch(() => {})
+              }}>
+        {copied ? 'Copied' : `ID ${id}`}
+      </button>
+      <a className="q-id-yt" href={search} target="_blank" rel="noreferrer"
+         title="Search YouTube for this question">YouTube</a>
+    </span>
   )
 }

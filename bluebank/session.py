@@ -27,6 +27,7 @@ def _row_to_question(row):
         "rationale_html": row["rationale_html"],
         "key_recovered": bool(row["key_recovered"]),
         "source_path": row["source_path"],
+        "cb_id": row["cb_id"],
     }
 
 
@@ -242,7 +243,7 @@ def question_set(conn, section=None, domains=None, skills=None,
     }.get(order, "shuffle_key(q.id)")
 
     rows = conn.execute(f"""
-        SELECT q.id, q.section, q.domain, q.domain_name, q.skill, q.skill_name,
+        SELECT q.id, q.cb_id, q.section, q.domain, q.domain_name, q.skill, q.skill_name,
                q.difficulty, q.band, q.type,
                last.correct AS last_correct, last.seconds AS last_seconds,
                last.response AS last_response, last.answered_at,
