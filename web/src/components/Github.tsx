@@ -5,7 +5,7 @@
  * filled logo and would need a fill path in a component whose whole contract
  * is `stroke`.
  */
-export const REPO = 'https://github.com/jackwangxyw/Bluebank'
+export const REPO = 'https://github.com/TheKaito2/Bluebank'
 
 export function GithubMark({ size = 16 }: { size?: number }) {
   return (
