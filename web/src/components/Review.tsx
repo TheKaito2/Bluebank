@@ -20,9 +20,10 @@ import * as api from '../api'
 import { QuestionDetail } from './QuestionDetail'
 import { Icon } from './Icon'
 import { PageHead } from './PageHead'
+import { TAG_LABEL } from './MistakeFields'
 import { describeSet } from '../lib/setlabel'
 import { duration, formatClock } from '../lib/pacing'
-import type { PracticeSet, Section, SetItem } from '../types'
+import { MISTAKE_TAGS, type MistakeTag, type PracticeSet, type Section, type SetItem } from '../types'
 
 const SECTION_LABEL: Record<Section, string> = {
   RW: 'Reading and Writing', MATH: 'Math',
@@ -42,6 +43,8 @@ const DIFFICULTY_RANK: Record<string, number> = { E: 0, M: 1, H: 2 }
  * says it was eventually right, and the row shows the attempt count beside it.
  */
 function verdict(item: SetItem): { cls: string; label: string } {
+  // Marked but never answered: only the Marked filter brings these in.
+  if (item.answered_at === null) return { cls: 'skip', label: 'Not answered' }
   if (item.last_correct !== 1) return { cls: 'wrong', label: 'Incorrect' }
   if (item.attempt_count > 1) return { cls: 'retry', label: 'Retried' }
   return { cls: 'right', label: 'Correct' }
@@ -61,10 +64,10 @@ function dayKey(ts: number | null): string {
   return then.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
 }
 
-type Filter = 'all' | 'incorrect' | 'logged'
+type Filter = 'all' | 'incorrect' | 'marked' | 'logged'
 
 const FILTERS: [Filter, string][] = [
-  ['all', 'All'], ['incorrect', 'Incorrect'], ['logged', 'Has a note'],
+  ['all', 'All'], ['incorrect', 'Incorrect'], ['marked', 'Marked'], ['logged', 'Has a note'],
 ]
 
 interface Props {
@@ -77,23 +80,25 @@ interface Props {
 export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
   const [sets, setSets] = useState<PracticeSet[] | null>(null)
   const [items, setItems] = useState<SetItem[] | null>(null)
-  /** Which questions have a mistake log. Filled in as rows are opened. */
-  const [logged, setLogged] = useState<Set<string>>(new Set())
+  /** Questions with a mistake log, and their tags. Loaded up front. */
+  const [logged, setLogged] = useState<Map<string, MistakeTag[]>>(new Map())
   const [filter, setFilter] = useState<Filter>('all')
+  /** Narrows "Has a note" to one kind of mistake. Null is any. */
+  const [tag, setTag] = useState<MistakeTag | null>(null)
   const [open, setOpen] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   /**
-   * Stable identity, and it returns the previous Set unchanged when nothing
+   * Stable identity, and it returns the previous Map unchanged when nothing
    * moved. Both matter: Detail calls this from an effect, so a new closure or a
-   * new Set every time would re-render the parent, hand Detail a new callback,
+   * new Map every time would re-render the parent, hand Detail a new callback,
    * and re-run the effect forever.
    */
-  const markLogged = useCallback((qid: string, has: boolean) => {
+  const markLogged = useCallback((qid: string, tags: MistakeTag[] | null) => {
     setLogged((prev) => {
-      if (has === prev.has(qid)) return prev
-      const next = new Set(prev)
-      if (has) next.add(qid)
+      if ((tags?.join() ?? null) === (prev.get(qid)?.join() ?? null)) return prev
+      const next = new Map(prev)
+      if (tags) next.set(qid, tags)
       else next.delete(qid)
       return next
     })
@@ -106,7 +111,7 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
     // Up front, not as rows are opened: a filter that only knows about what you
     // already clicked is not a filter.
     api.loggedIds()
-      .then((d) => setLogged(new Set(d.question_ids)))
+      .then((d) => setLogged(new Map(d.question_ids.map((id) => [id, d.tags?.[id] ?? []]))))
       .catch(() => { /* the filter degrades to empty, the page still works */ })
     // Finished sets. A failure leaves the section out rather than the page.
     api.listSets(false)
@@ -179,10 +184,13 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
     )
   }
 
-  const shown = items.filter((i) => (
-    filter === 'incorrect' ? i.last_correct !== 1
-      : filter === 'logged' ? logged.has(i.id)
-        : true))
+  // Unanswered rows are only there for Marked; everywhere else they'd be noise.
+  const answered = items.filter((i) => i.answered_at !== null)
+  const shown = filter === 'marked' ? items.filter((i) => i.flagged === 1)
+    : answered.filter((i) => (
+      filter === 'incorrect' ? i.last_correct !== 1
+        : filter === 'logged' ? logged.has(i.id) && (!tag || logged.get(i.id)!.includes(tag))
+          : true))
 
   // Section, then day, then easy to hard. The list arrives newest first, so the
   // days keep that order simply by being met in turn.
@@ -207,15 +215,15 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
     }
   }
 
-  const correct = items.filter((i) => i.last_correct === 1).length
-  const total = items.reduce((sum, i) => sum + (i.last_seconds ?? 0), 0)
+  const correct = answered.filter((i) => i.last_correct === 1).length
+  const total = answered.reduce((sum, i) => sum + (i.last_seconds ?? 0), 0)
 
   return (
     <>
     {head(
       <div className="htiles">
-        <div className="htile"><span className="htile-n">{items.length.toLocaleString()}</span><span className="htile-l">answered</span></div>
-        <div className="htile"><span className="htile-n">{items.length ? Math.round((correct / items.length) * 100) : 0}<small>%</small></span><span className="htile-l">correct</span></div>
+        <div className="htile"><span className="htile-n">{answered.length.toLocaleString()}</span><span className="htile-l">answered</span></div>
+        <div className="htile"><span className="htile-n">{answered.length ? Math.round((correct / answered.length) * 100) : 0}<small>%</small></span><span className="htile-l">correct</span></div>
         <div className="htile"><span className="htile-n">{duration(Math.round(total))}</span><span className="htile-l">spent</span></div>
       </div>,
     )}
@@ -230,6 +238,18 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
         ))}
       </div>
 
+      {filter === 'logged' ? (
+        <div className="chips review-tags" role="group" aria-label="Kind of mistake">
+          {[null, ...MISTAKE_TAGS].map((t) => (
+            <button key={t ?? 'any'} className={tag === t ? 'chip on' : 'chip'}
+                    aria-pressed={tag === t}
+                    onClick={() => setTag(t)}>
+              {t ? TAG_LABEL[t] : 'Any'}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
       {!shown.length ? (
         <p className="review-empty">Nothing matches this filter.</p>
       ) : null}
@@ -243,7 +263,10 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
             <div className="spanel-txt">
               <h2 className="spanel-t">{SECTION_LABEL[group.section]}</h2>
               <p className="spanel-sub">
-                {group.days.reduce((n, d) => n + d.rows.length, 0)} answered
+                {(() => {
+                  const n = group.days.reduce((sum, d) => sum + d.rows.length, 0)
+                  return `${n} question${n === 1 ? '' : 's'}`
+                })()}
               </p>
             </div>
           </header>

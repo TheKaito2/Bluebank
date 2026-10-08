@@ -29,9 +29,10 @@ interface Props {
   lead?: string
   /** Distinguishes the note fields when more than one is on the page. */
   id?: string
+  rows?: number
 }
 
-export function MistakeFields({ mistake, onSave, lead, id = 'mlog-note' }: Props) {
+export function MistakeFields({ mistake, onSave, lead, id = 'mlog-note', rows = 6 }: Props) {
   // Initialised from the prop and then owned locally, so callers key this by
   // question id rather than copying the prop back into state on every change.
   const [tags, setTags] = useState<MistakeTag[]>(mistake?.tags ?? [])
@@ -82,7 +83,7 @@ export function MistakeFields({ mistake, onSave, lead, id = 'mlog-note' }: Props
       </div>
 
       <label className="mlog-label" htmlFor={id}>Notes</label>
-      <textarea id={id} className="mlog-note" rows={6}
+      <textarea id={id} className="mlog-note" rows={rows}
                 placeholder="What you missed, and what to do next time."
                 value={note}
                 onChange={(e) => setNote(e.target.value)}

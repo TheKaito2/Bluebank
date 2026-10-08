@@ -8,7 +8,8 @@ import { GithubLink } from './components/Github'
 import { SupportHost, SupportLink } from './components/Support'
 import { Navigator } from './components/Navigator'
 import { Notes } from './components/Notes'
-import { MistakeLog } from './components/MistakeLog'
+import { QuestionInfo } from './components/QuestionInfo'
+import { ReferenceSheet } from './components/ReferenceSheet'
 import { Review } from './components/Review'
 import { QuestionView } from './components/QuestionView'
 import { Desmos, DESMOS_EMBEDDED } from './components/Desmos'
@@ -111,7 +112,8 @@ export default function App() {
 
   const [showNavigator, setShowNavigator] = useState(false)
   const [showNotes, setShowNotes] = useState(false)
-  const [showMistake, setShowMistake] = useState(false)
+  const [showReference, setShowReference] = useState(false)
+  const closeReference = useCallback(() => setShowReference(false), [])
   const [mistake, setMistake] = useState<Mistake | null>(null)
   const [showDirections, setShowDirections] = useState(false)
   const [showTimer, setShowTimer] = useState(true)
@@ -213,7 +215,6 @@ export default function App() {
 
   useEffect(() => {
     if (!practising || !current) { setQuestion(null); return }
-    setShowMistake(false)
     let stale = false
     setLoading(true)
     setQuestion(null); setResult(null)
@@ -747,6 +748,14 @@ export default function App() {
         </div>
 
         <div className="topbar-right">
+          {question ? <QuestionInfo question={question} /> : null}
+          {section === 'MATH' ? (
+            <button className={showReference ? 'tool on' : 'tool'} aria-label="Reference"
+                    onClick={() => setShowReference((v) => !v)}>
+              <span className="tool-glyphs"><Icon name="ruler" size={21} /></span>
+              <span className="tool-label"><span className="tool-text">Reference</span></span>
+            </button>
+          ) : null}
           {section === 'MATH' && DESMOS_EMBEDDED ? (
             <button className={showDesmos ? 'tool on' : 'tool'} aria-label="Calculator"
                     onClick={() => setShowDesmos((v) => !v)}>
@@ -778,20 +787,6 @@ export default function App() {
               {annotations.length ? ` (${annotations.length})` : ''}
             </span>
           </button>
-          {/* Not during a set. A set withholds the verdict until it ends, so
-              logging why you missed one here would be guessing at whether you
-              missed it at all. The score screen logs them instead, where every
-              question already says right or wrong. */}
-          {activeSet ? null : (
-            <button className={showMistake ? 'tool on' : 'tool'}
-                    onClick={() => setShowMistake((v) => !v)}>
-              <span className="tool-glyphs"><Icon name="tag" size={20} /></span>
-              <span className={mistake ? 'tool-label has-count' : 'tool-label'}>
-                <span className="tool-text">Mistake log</span>
-                {mistake ? ` (${mistake.tags.length || 1})` : ''}
-              </span>
-            </button>
-          )}
           <div className="tool static">
             <span className="tool-glyphs"><Icon name="check" size={21} /></span>
             <span>
@@ -838,6 +833,12 @@ export default function App() {
             onAddAnnotation={(a) => persistAnnotations([...annotations, a as Annotation])}
             onRemoveAnnotation={(id) =>
               persistAnnotations(annotations.filter((a) => a.id !== id))}
+            mistake={mistake}
+            onSaveMistake={(tags, note) => {
+              void api.saveMistake(current.id, tags, note)
+                .then((r) => setMistake(r.mistake))
+                .catch((e: Error) => setError(e.message))
+            }}
           />
         ) : null}
         {showDesmos && DESMOS_EMBEDDED ? (
@@ -895,16 +896,7 @@ export default function App() {
                    onFinish={finishSet} />
       ) : null}
 
-      {showMistake && current && !activeSet ? (
-        <MistakeLog key={current.id}
-                    mistake={mistake}
-                    onClose={() => setShowMistake(false)}
-                    onSave={(tags, note) => {
-                      void api.saveMistake(current.id, tags, note)
-                        .then((r) => setMistake(r.mistake))
-                        .catch((e: Error) => setError(e.message))
-                    }} />
-      ) : null}
+      {showReference ? <ReferenceSheet onClose={closeReference} /> : null}
 
       {showNotes ? (
         <Notes annotations={annotations}

@@ -1214,6 +1214,11 @@ body.dragging-panel, body.dragging-panel .desmos-head { cursor: grabbing; user-s
   .topbar-right { gap: 9px; }
   .tool-glyphs { gap: 3px; }
   .tool { max-width: 50px; font-size: 9px; }
+  /* Info and Reference joined the bar, so phones get one glyph per tool and
+     drop the running score (Home and Stats show it). Measured at 375px: five
+     tools overran the clock. */
+  .tool-glyphs > svg + svg { display: none; }
+  .topbar-right > .tool.static { display: none; }
   .clock { font-size: 15.5px; }
   .section-title { font-size: 13.5px; }
   .navbtn { padding: 7px 9px; font-size: 12px; }
@@ -1301,6 +1306,8 @@ body.dragging-panel, body.dragging-panel .desmos-head { cursor: grabbing; user-s
 .review-badge.right { background: var(--green-soft); color: var(--green); }
 .review-badge.retry { background: var(--yellow-soft); color: var(--amber-ink); }
 .review-badge.wrong { background: var(--red-soft); color: var(--red); }
+.review-badge.skip { background: var(--n-100); color: var(--n-700); }
+.review-tags { margin: var(--sp-2) 0 var(--sp-4); }
 .review-badge.blank { background: var(--yellow-soft); color: var(--amber-ink); }
 
 
@@ -1891,8 +1898,6 @@ body.dragging-panel, body.dragging-panel .desmos-head { cursor: grabbing; user-s
 .q-id-copy:hover, .q-id-yt:hover { background: var(--bg-soft); }
 .q-id-copy:focus-visible, .q-id-yt:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: -2px; }
 @media (max-width: 470px) {
-  /* The ribbon alone says "mark"; the words pushed the ID off the row. */
-  .markbtn span { display: none; }
   .q-head { gap: 8px; }
   .q-id { margin-right: 4px; }
   .q-id-copy { font-size: 11px; padding: 3px 7px; min-width: 9ch; }
@@ -2296,3 +2301,48 @@ button.brand {
   .tablinks .tab { font-size: 10.5px; }
 }
 a.tool { text-decoration: none; color: inherit; }
+
+/* ---- practice: inline mistake log under a wrong answer ---- */
+.mlog-practice {
+  margin-top: var(--sp-5); padding: var(--sp-4) var(--sp-5);
+  border: 1px solid var(--n-200); border-radius: var(--rad-lg); background: var(--n-25);
+}
+.mlog-practice .mlog-lead { font-family: var(--display); font-weight: 750; font-size: var(--fs-lg); color: var(--n-900); }
+.mlog-practice .mlog-label { margin-top: var(--sp-3); }
+
+/* ---- practice: Info popover (ID, difficulty, band) ---- */
+.qinfo { position: relative; }
+.qinfo-pop {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 60;
+  display: grid; gap: 10px; min-width: 250px; padding: 14px 16px;
+  background: var(--n-0); border: 1px solid var(--n-200); border-radius: var(--rad-md);
+  box-shadow: var(--sh-3); color: var(--n-900); text-align: left;
+}
+.qinfo-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.qinfo-k { font-size: 12px; font-weight: 650; color: var(--n-500); text-transform: uppercase; letter-spacing: .04em; }
+.qinfo-v { font-family: var(--display); font-weight: 750; font-size: 18px; font-variant-numeric: tabular-nums; }
+.qinfo-v .dim { font-size: 13px; color: var(--n-500); font-weight: 600; }
+.qinfo .q-id { margin-right: 0; }
+
+/* ---- practice: Math reference sheet ---- */
+.ref-panel { width: min(460px, 100vw); }
+.ref-body { padding: 16px 18px 28px; overflow-y: auto; }
+.ref-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ref-card {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 8px 12px;
+  border: 1px solid var(--math-100); border-radius: var(--rad-md); background: var(--math-50); text-align: center;
+}
+.ref-fig { width: 100%; max-width: 132px; height: auto; fill: none; stroke: var(--math-700); stroke-width: 1.6; stroke-linejoin: round; }
+.ref-card.wide { grid-column: span 2; }
+.ref-card.wide .ref-fig { max-width: 264px; }
+.ref-fig .ref-dash { stroke-dasharray: 3 3; stroke-width: 1.2; }
+.ref-fig .ref-dot { fill: var(--math-700); }
+.ref-lbl { fill: var(--n-900); stroke: none; font-size: 10px; font-style: italic; font-family: Georgia, 'Times New Roman', serif; }
+.ref-name { margin-top: 4px; font-size: 12px; font-weight: 650; color: var(--n-500); }
+.ref-f { font-family: Georgia, 'Times New Roman', serif; font-size: 15.5px; color: var(--n-900); }
+.ref-f sup, .ref-f sub { font-size: .68em; }
+.ref-facts { margin: 16px 0 0; padding-left: 18px; font-size: 13.5px; line-height: 1.6; color: var(--n-700); }
+@media (max-width: 470px) {
+  /* Anchored to the button it ran off the left edge; pin it under the bar. */
+  .qinfo-pop { position: fixed; top: 62px; left: 12px; right: 12px; min-width: 0; }
+}

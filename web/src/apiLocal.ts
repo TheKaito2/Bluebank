@@ -359,17 +359,19 @@ export async function saveMistake(
 export async function reviewed(): Promise<{ questions: SetItem[] }> {
   const c = await boot()
   const questions = c.stubs
-    .filter((stub) => Boolean(lastAttempt(c, stub._id)))
+    // Marked ones too, answered or not: Review's Marked filter needs them.
+    .filter((stub) => Boolean(lastAttempt(c, stub._id)) || c.flagged.has(stub._id))
     .map((stub) => toSetItem(stub, c))
     .sort((a, b) => (b.answered_at ?? 0) - (a.answered_at ?? 0))
   return { questions }
 }
 
-/** Ids of every question with a mistake log, for Review's filter. */
-export async function loggedIds(): Promise<{ question_ids: string[] }> {
-  const rows = await store.loadAllMistakes()
+/** Every question with a mistake log and its tags, for Review's filters. */
+export async function loggedIds(): Promise<{ question_ids: string[]; tags: Record<string, MistakeTag[]> }> {
+  const rows = (await store.loadAllMistakes()).filter((m) => !store.isEmptyMistake(m))
   return {
-    question_ids: rows.filter((m) => !store.isEmptyMistake(m)).map((m) => m.question_id),
+    question_ids: rows.map((m) => m.question_id),
+    tags: Object.fromEntries(rows.map((m) => [m.question_id, m.tags])),
   }
 }
 

@@ -50,10 +50,10 @@ export function saveMistake(id: string, tags: MistakeTag[], note: string | null)
   })
 }
 
-/** Every question with at least one attempt, most recently answered first. */
+/** Every question with an attempt or a mark, most recently answered first. */
 export function reviewed() {
   return call<{ count: number; questions: SetItem[] }>(
-    '/api/set?status=correct&status=wrong&order=recent')
+    '/api/set?status=correct&status=wrong&status=flagged&order=recent')
 }
 
 export function question(id: string) {
@@ -67,7 +67,7 @@ export function question(id: string) {
 
 /** Ids of every question with a mistake log, for Review's filter. */
 export function loggedIds() {
-  return call<{ question_ids: string[] }>('/api/mistakes')
+  return call<{ question_ids: string[]; tags: Record<string, MistakeTag[]> }>('/api/mistakes')
 }
 
 /** Every attempt at one question, oldest first. */

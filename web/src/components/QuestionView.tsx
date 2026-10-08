@@ -3,7 +3,8 @@ import { RichText } from './RichText'
 import { Explanation } from './Explanation'
 import { BookmarkFilled, Icon, SplitHandle } from './Icon'
 import { FeedbackLink } from './Feedback'
-import type { Annotation, GradeResult, Question } from '../types'
+import { MistakeFields } from './MistakeFields'
+import type { Annotation, GradeResult, Mistake, MistakeTag, Question } from '../types'
 
 /**
  * Below this the two panes stack instead of sitting side by side.
@@ -13,10 +14,6 @@ import type { Annotation, GradeResult, Question } from '../types'
  * and made single choices over 900px tall. It has to match the breakpoint in
  * styles.css.
  */
-const DIFFICULTY_LABEL: Record<string, string> = {
-  E: 'Easy', M: 'Medium', H: 'Hard',
-}
-
 const STACK_BELOW = 820
 
 function useStacked(): boolean {
@@ -56,6 +53,9 @@ interface Props {
    * explanation, and the choices stay live so you can change your mind.
    */
   deferred?: boolean
+  /** Why you missed it. Asked inline, and only after a wrong answer. */
+  mistake: Mistake | null
+  onSaveMistake: (tags: MistakeTag[], note: string | null) => void
 }
 
 interface PendingSelection {
@@ -73,7 +73,7 @@ export function QuestionView(props: Props) {
     question, number, annotations, result, seconds, response, flagged,
     crossOutMode, crossOut, onRespond, onSubmit, onToggleFlag,
     onToggleCrossOutMode, onToggleCrossOut, onAddAnnotation, onRemoveAnnotation,
-    deferred,
+    deferred, mistake, onSaveMistake,
   } = props
 
   const [pending, setPending] = useState<PendingSelection | null>(null)
@@ -179,18 +179,8 @@ export function QuestionView(props: Props) {
           <span>{flagged ? 'Marked for Review' : 'Mark for Review'}</span>
         </button>
 
+        {/* ID, difficulty and band live behind Info in the top bar. */}
         <span className="q-head-spacer" />
-
-        {/* College Board's own id: the string videos and forums quote, so you
-            can look up a walkthrough. */}
-        {question.cb_id ? <QuestionId id={question.cb_id} /> : null}
-
-        {/* College Board's own rating for this question. Useful mid-set: a slow
-            answer on a Hard one reads differently from a slow answer on an
-            Easy one. */}
-        <span className={`q-diff d-${question.difficulty}`}>
-          {DIFFICULTY_LABEL[question.difficulty] ?? question.difficulty}
-        </span>
 
         {question.type === 'mcq' ? (
           <button className={crossOutMode ? 'strike on' : 'strike'}
@@ -259,6 +249,16 @@ export function QuestionView(props: Props) {
         <Explanation result={result!} question={question} seconds={seconds} />
       )}
 
+      {/* Only when it went wrong: a log on a right answer is noise. Keyed so a
+          new question starts blank rather than inheriting the last one's text. */}
+      {answered && !deferred && !result!.correct ? (
+        <section className="mlog-practice" aria-label="Mistake log">
+          <MistakeFields key={question.id} mistake={mistake} onSave={onSaveMistake}
+                         lead="Why did you miss it?" id="mlog-inline" rows={3} />
+          <p className="mlog-fine">Saved automatically. Shows up on Review.</p>
+        </section>
+      ) : null}
+
       <FeedbackLink label="Report a problem with this question" className="fb-link q-report"
                     ctx={{ question_id: question.id, cb_id: question.cb_id, context: 'question', kind: 'bug' }} />
     </div>
@@ -312,25 +312,5 @@ export function QuestionView(props: Props) {
         </div>
       ) : null}
     </div>
-  )
-}
-
-function QuestionId({ id }: { id: string }) {
-  const [copied, setCopied] = useState(false)
-  const search = `https://www.youtube.com/results?search_query=${encodeURIComponent(id)}`
-  return (
-    <span className="q-id">
-      <button className="q-id-copy" title="Copy question ID"
-              onClick={() => {
-                navigator.clipboard?.writeText(id).then(() => {
-                  setCopied(true)
-                  setTimeout(() => setCopied(false), 1400)
-                }).catch(() => {})
-              }}>
-        {copied ? 'Copied' : `ID ${id}`}
-      </button>
-      <a className="q-id-yt" href={search} target="_blank" rel="noreferrer"
-         title="Search YouTube for this question">YouTube</a>
-    </span>
   )
 }

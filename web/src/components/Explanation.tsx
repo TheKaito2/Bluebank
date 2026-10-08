@@ -12,13 +12,15 @@ interface Props {
    * read the reasoning.
    */
   startOpen?: boolean
+  /** Marked in Review but never answered: show the key, not a verdict. */
+  unanswered?: boolean
 }
 
 /**
  * Post-answer review. Every word here is College Board's own rationale text;
  * nothing is generated.
  */
-export function Explanation({ result, question, seconds, startOpen = false }: Props) {
+export function Explanation({ result, question, seconds, startOpen = false, unanswered = false }: Props) {
   const [open, setOpen] = useState(startOpen)
   const isMcq = question.type === 'mcq'
 
@@ -39,10 +41,12 @@ export function Explanation({ result, question, seconds, startOpen = false }: Pr
   return (
     <div className="explain">
       <div className="explain-head">
-        <span className={result.correct ? 'verdict ok' : 'verdict no'}>
-          {result.correct ? 'Correct' : 'Incorrect'}
-        </span>
-        <span className="verdict-time">{seconds}s on this question</span>
+        {unanswered ? <span className="verdict-time">Not answered yet</span> : (<>
+          <span className={result.correct ? 'verdict ok' : 'verdict no'}>
+            {result.correct ? 'Correct' : 'Incorrect'}
+          </span>
+          <span className="verdict-time">{seconds}s on this question</span>
+        </>)}
         <button className="btn ghost" onClick={() => setOpen(false)}>Hide</button>
       </div>
 

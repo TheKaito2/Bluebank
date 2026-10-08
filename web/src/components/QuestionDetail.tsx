@@ -34,8 +34,8 @@ interface Props {
   response: string | null
   seconds: number
   onPractice: (id: string) => void
-  /** Feeds Review's "Has a note" filter. Absent where nothing tracks it. */
-  onLogged?: (id: string, has: boolean) => void
+  /** Feeds Review's note filters: the tags, or null for no log. */
+  onLogged?: (id: string, tags: MistakeTag[] | null) => void
   /**
    * Log the mistake here rather than only read it back. On for a finished
    * set's score screen, which is the first place in a set you learn whether
@@ -75,7 +75,7 @@ export function QuestionDetail({
       .then(([q, r, a]) => {
         if (stale) return
         setData(q); setResult(r); setAttempts(a.attempts)
-        onLogged?.(id, Boolean(q.mistake))
+        onLogged?.(id, q.mistake ? q.mistake.tags : null)
       })
       .catch((e: Error) => !stale && setError(e.message))
     return () => { stale = true }
@@ -92,7 +92,8 @@ export function QuestionDetail({
     void api.saveMistake(id, tags, note)
       .then((r) => {
         setData((d) => (d ? { ...d, mistake: r.mistake } : d))
-        onLogged?.(id, Boolean(r.mistake && (r.mistake.tags.length || r.mistake.note)))
+        onLogged?.(id, r.mistake && (r.mistake.tags.length || r.mistake.note)
+          ? r.mistake.tags : null)
       })
       .catch((e: Error) => setLogError(e.message))
   }
@@ -149,6 +150,8 @@ export function QuestionDetail({
         </ul>
       ) : null}
 
+      {/* Marked but never answered: no attempts, no verdict. */}
+      {attempts.length ? (<>
       <h4 className="review-h">Your attempts</h4>
       <div className="review-tablewrap">
         <table className="review-table">
@@ -168,6 +171,7 @@ export function QuestionDetail({
           </tbody>
         </table>
       </div>
+      </>) : null}
 
       {/* Editable where the verdict has just been revealed, read-only
           elsewhere. Nothing logged and nothing to log with means nothing to
@@ -225,7 +229,7 @@ export function QuestionDetail({
       ) : null}
 
       <Explanation result={result} question={data.question}
-                   seconds={seconds} startOpen />
+                   seconds={seconds} startOpen unanswered={!attempts.length} />
 
       <button className="btn small review-again" onClick={() => onPractice(id)}>
         Practice this question again

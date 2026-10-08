@@ -47,5 +47,10 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   back on.
 - 2026-10-08: PromptPay QR added to the Support popup (cropped to the code,
   metadata stripped).
+- 2026-10-08: Practice: Info button (ID, difficulty, score band) replaces the
+  ID and difficulty beside Mark for Review; Math reference sheet (own
+  drawings); mistake log asked inline only after a wrong answer, drawer
+  removed. Review: Marked filter (answered or not) and mistake-type chips
+  under "Has a note".
 
 The full history of changes is in the git log.

@@ -8,7 +8,7 @@ type Name =
   | 'grip' | 'check' | 'sliders' | 'pin' | 'trash' | 'underline' | 'arrow-right'
   | 'split' | 'expand' | 'shrink' | 'grip-h' | 'dots9' | 'tag' | 'search'
   | 'flame' | 'lock' | 'heart' | 'coffee' | 'trend-up' | 'trend-down' | 'qr'
-  | 'book' | 'target' | 'layers' | 'sigma' | 'grid' | 'history' | 'chart' | 'info' | 'compass' | 'play' | 'external' | 'star'
+  | 'book' | 'target' | 'layers' | 'sigma' | 'grid' | 'history' | 'chart' | 'info' | 'compass' | 'play' | 'external' | 'star' | 'ruler'
 
 const PATHS: Record<Name, string> = {
   'chevron-left': 'M15 18l-6-6 6-6',
@@ -44,6 +44,7 @@ const PATHS: Record<Name, string> = {
   grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
   history: 'M3.5 12a8.5 8.5 0 102.5-6L3.5 8.5M3.5 3.5v5h5M12 7.5V12l3 2',
   chart: 'M4 20V11M10 20V5M16 20v-6M20.5 20h-17',
+  ruler: 'M3 17L17 3l4 4L7 21zM7.5 12.5l2 2M10.5 9.5l2 2M13.5 6.5l2 2',
   info: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5.5M12 7.5h.01',
   compass: 'M12 21a9 9 0 100-18 9 9 0 000 18zM15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z',
   play: 'M7 4.5v15l12.5-7.5z',

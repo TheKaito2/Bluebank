@@ -122,7 +122,8 @@ def _drop_set(conn, query, body, set_id):
 
 @Api.route("GET", r"/api/mistakes")
 def _mistakes(conn, query, body):
-    return {"question_ids": session.logged_question_ids(conn)}
+    ids, tags = session.logged_question_ids(conn)
+    return {"question_ids": ids, "tags": tags}
 
 
 @Api.route("GET", r"/api/questions/([^/]+)/attempts")
