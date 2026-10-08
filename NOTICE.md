@@ -21,5 +21,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   rows, filters as a bottom sheet, compact question header.
 - 2026-10-08: Support links (Ko-fi in the nav, Ko-fi and Buy Me a Coffee on
   About); privacy page lists the donation platforms.
+- 2026-10-08: Question ID search on the home list; anonymous bug/feedback
+  form (Worker /feedback, rate limited) with an owner-only inbox.
 
 The full history of changes is in the git log.

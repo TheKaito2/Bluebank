@@ -10,6 +10,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import * as auth from '../lib/auth'
 import * as sync from '../lib/sync'
+import * as fb from '../lib/feedback'
 import { Icon } from './Icon'
 
 const LABEL: Record<sync.SyncStatus, string> = {
@@ -135,6 +136,8 @@ function SignedInPanel(
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [admin, setAdmin] = useState(false)
+  useEffect(() => { fb.isAdmin().then(setAdmin).catch(() => setAdmin(false)) }, [])
 
   const handleSignOut = useCallback(async () => {
     setBusy(true)
@@ -182,6 +185,12 @@ function SignedInPanel(
         </button>
       </div>
       <p className="acct-fine">Signing out keeps everything on this device.</p>
+      {admin ? (
+        <button className="acct-btn acct-inbox"
+                onClick={() => { window.location.hash = 'inbox'; onClose() }}>
+          Feedback inbox
+        </button>
+      ) : null}
 
       <div className="acct-danger">
         {confirmDelete ? (

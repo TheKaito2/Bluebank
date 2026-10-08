@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { BookmarkFilled, Icon } from './Icon'
 import { cellState } from './Navigator'
+import { FeedbackLink } from './Feedback'
 import { SPEEDS, setSeconds, formatClock } from '../lib/pacing'
 import { describeSet } from '../lib/setlabel'
 import type { Order } from '../lib/order'
@@ -82,7 +83,17 @@ export function Home({
   const [open, setOpen] = useState<Set<string>>(new Set())
   /** Phone only: the sidebar folds away behind a Filters button. */
   const [showFilters, setShowFilters] = useState(false)
+  /** Question ID search. Filters the list on screen; numbers keep their place. */
+  const [query, setQuery] = useState('')
   const count = items.length
+
+  const needle = query.trim().toLowerCase()
+  const rows = useMemo(() => {
+    const all = items.map((q, i) => [q, i] as const)
+    if (!needle) return all
+    return all.filter(([q]) => (q.cb_id ?? '').toLowerCase().includes(needle)
+      || q.id.toLowerCase().startsWith(needle))
+  }, [items, needle])
 
   const plannedSeconds = useMemo(() => {
     if (!value.size || !value.speed) return 0
@@ -341,6 +352,10 @@ export function Home({
             </label>
           ) : null}
 
+          <div className="side-block side-fb">
+            <FeedbackLink label="Found a bug? Send feedback" ctx={{ context: 'home' }} />
+          </div>
+
           <div className="side-block phone-only">
             <h2 className="side-t">Practice mode</h2>
             <div className="chips">
@@ -417,6 +432,13 @@ export function Home({
                 )}
               </p>
             </div>
+            <label className="qsearch">
+              <Icon name="search" size={16} />
+              <input type="search" value={query} placeholder="Find by question ID"
+                     aria-label="Find a question by its College Board ID"
+                     autoCapitalize="off" autoCorrect="off" spellCheck={false}
+                     onChange={(e) => setQuery(e.target.value)} />
+            </label>
             <button className="btn filters-btn" onClick={() => setShowFilters((x) => !x)}
                     aria-expanded={showFilters}>
               <Icon name="sliders" size={16} />
@@ -471,13 +493,25 @@ export function Home({
             </div>
           </div>
 
-          {count ? (
+          {needle && !loading ? (
+            <p className="qfound">
+              {rows.length
+                ? `${rows.length} match${rows.length === 1 ? '' : 'es'} for "${query.trim()}"`
+                : `No question with ID "${query.trim()}"${activeFilters || value.section ? ' in these filters' : ''}.`}
+              {!rows.length && (activeFilters || value.section) ? (
+                <button className="link" onClick={() => onChange({})}>Search all questions</button>
+              ) : null}
+              <button className="link" onClick={() => setQuery('')}>Clear search</button>
+            </p>
+          ) : null}
+
+          {rows.length ? (
             <div className="qlist" role="list">
               <div className="qrow qrow-head" aria-hidden="true">
                 <span>#</span><span>Skill</span><span>Level</span><span>Status</span>
                 <span className="qrow-when">Last</span>
               </div>
-              {items.map((q, i) => {
+              {rows.map(([q, i]) => {
                 const st = cellState(q)
                 return (
                   <button key={q.id} role="listitem" className="qrow" onClick={() => onOpen(i)}>
@@ -502,7 +536,7 @@ export function Home({
                 )
               })}
             </div>
-          ) : !loading ? (
+          ) : !loading && !needle ? (
             <div className="qempty">
               <p>No questions match these filters.</p>
               <button className="btn" onClick={() => onChange({ section: value.section })}>

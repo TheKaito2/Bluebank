@@ -8,6 +8,7 @@
 
 import { DONATE, DONATE_ALT, REPO } from './Github'
 import { configured } from '../lib/auth'
+import { FeedbackLink } from './Feedback'
 
 const UPSTREAM = 'https://github.com/jackwangxyw/Bluebank'
 
@@ -84,6 +85,15 @@ export function About() {
           </p>
         </section>
       ) : null}
+
+      <section className="about-block">
+        <h2 className="about-h2">Found a bug? Got an idea?</h2>
+        <p className="about-p">
+          Tell me. Messages are anonymous and go straight to me. To report a
+          problem with one question, use the link under that question.
+        </p>
+        <FeedbackLink label="Send feedback" className="btn primary" ctx={{ context: 'about' }} />
+      </section>
 
       <section className="about-block">
         <h2 className="about-h2">Credits and license</h2>

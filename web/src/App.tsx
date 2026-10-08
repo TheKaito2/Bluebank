@@ -16,6 +16,8 @@ import { Mark } from './components/Mark'
 import { SetResults } from './components/SetResults'
 import type { CellState } from './components/Navigator'
 import { SetReview } from './components/SetReview'
+import { FeedbackHost } from './components/Feedback'
+import { Inbox } from './components/Inbox'
 import { sample } from './lib/draw'
 import { arrange, type Order } from './lib/order'
 import { setSeconds, formatClock as formatCountdown } from './lib/pacing'
@@ -48,7 +50,7 @@ const DIRECTIONS = {
 
 export default function App() {
   const [view, setView] =
-    useState<'home' | 'stats' | 'about' | 'review' | 'practice' | 'results'>('home')
+    useState<'home' | 'stats' | 'about' | 'review' | 'practice' | 'results' | 'inbox'>('home')
 
   /** Bumped by a sync that pulled rows; drives the taxonomy refetch below. */
   const [dataVersion, setDataVersion] = useState(0)
@@ -147,6 +149,18 @@ export default function App() {
       if (one) { setItems([one]); setIndex(0); setView('practice') }
     }).catch((e: Error) => setError(e.message))
   }, [items])
+
+  // The feedback inbox has no tab: the account panel opens it with #inbox.
+  useEffect(() => {
+    const go = () => {
+      if (window.location.hash !== '#inbox') return
+      setView('inbox')
+      history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+    go()
+    window.addEventListener('hashchange', go)
+    return () => window.removeEventListener('hashchange', go)
+  }, [])
 
   // A pull from another device changes the same numbers an answer does.
   useEffect(() => sync.subscribe(() => setDataVersion(sync.getDataVersion())), [])
@@ -625,6 +639,10 @@ export default function App() {
                 onResume={openSet}
                 onAbandon={abandonSet}
                 onStart={startSet} />
+        ) : view === 'inbox' ? (
+          <div className="page">
+            <Inbox />
+          </div>
         ) : view === 'about' ? (
           <div className="page">
             <About />
@@ -654,6 +672,7 @@ export default function App() {
                        }} />
           </div>
         )}
+        <FeedbackHost />
       </div>
     )
   }
@@ -865,6 +884,7 @@ export default function App() {
           </div>
         </>
       ) : null}
+      <FeedbackHost />
     </div>
   )
 }

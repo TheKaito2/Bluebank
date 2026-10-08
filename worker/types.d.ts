@@ -47,4 +47,8 @@ interface Env {
   GOOGLE_CLIENT_ID: string
   /** Optional kill switch. Unset means anyone may sign in. */
   ALLOWED_SUBS?: string
+  /** Comma-separated Google subs allowed to read the feedback inbox. */
+  ADMIN_SUBS?: string
+  /** Workers rate-limit binding for POST /feedback. Optional. */
+  FEEDBACK_LIMITER?: { limit(opts: { key: string }): Promise<{ success: boolean }> }
 }

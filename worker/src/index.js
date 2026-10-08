@@ -573,6 +573,93 @@ async function handleSignOut(request, env, origin) {
   return json({ ok: true }, 200, origin)
 }
 
+// ------------------------------------------------------------------ feedback
+//
+// Bug reports and comments from the site. Anonymous on purpose: no sub, no IP,
+// no email is stored, so this table never holds anything that identifies a
+// person and account deletion has nothing to do here. Abuse stops are a
+// per-IP rate limit (the IP is used as a key and never stored) and a hard cap
+// on rows. Only subs listed in ADMIN_SUBS can read or change the inbox.
+
+const FEEDBACK_KINDS = ['bug', 'comment']
+const FEEDBACK_MAX_CHARS = 2000
+const FEEDBACK_MAX_ROWS = 5000
+
+/** @param {unknown} v @param {number} max */
+const optStr = (v, max) => (typeof v === 'string' && v.length > 0 && v.length <= max ? v : null)
+
+/** @param {Request} request @param {Env} env @param {string | null} origin */
+async function handleFeedback(request, env, origin) {
+  if (env.FEEDBACK_LIMITER) {
+    const key = request.headers.get('CF-Connecting-IP') || 'unknown'
+    const { success } = await env.FEEDBACK_LIMITER.limit({ key })
+    if (!success) return fail('too many messages, try again in a minute', 429, origin)
+  }
+  const body = await request.json().catch(() => null)
+  if (!body || typeof body !== 'object') return fail('bad request', 400, origin)
+  // Honeypot: a field people never see. Bots that fill every input get a fake
+  // success and nothing is written.
+  if (body.website) return json({ ok: true }, 200, origin)
+
+  const kind = FEEDBACK_KINDS.includes(body.kind) ? body.kind : null
+  const message = typeof body.message === 'string' ? body.message.trim() : ''
+  if (!kind) return fail('kind must be bug or comment', 400, origin)
+  if (!message || message.length > FEEDBACK_MAX_CHARS) {
+    return fail(`message must be 1-${FEEDBACK_MAX_CHARS} characters`, 400, origin)
+  }
+
+  const count = await env.DB.prepare('SELECT COUNT(*) AS n FROM feedback').first()
+  if (count && Number(count.n) >= FEEDBACK_MAX_ROWS) {
+    return fail('feedback inbox is full, try again later', 503, origin)
+  }
+
+  await env.DB.prepare(
+    'INSERT INTO feedback (id, created_at, kind, message, question_id, cb_id, context, status)'
+    + " VALUES (?, ?, ?, ?, ?, ?, ?, 'open')",
+  ).bind(
+    crypto.randomUUID(), Math.floor(Date.now() / 1000), kind, message,
+    optStr(body.question_id, 80), optStr(body.cb_id, 20), optStr(body.context, 40),
+  ).run()
+  return json({ ok: true }, 200, origin)
+}
+
+/** @param {Request} request @param {Env} env @returns {Promise<boolean>} */
+async function isAdmin(request, env) {
+  const sub = await subForRequest(request, env)
+  if (!sub) return false
+  const admins = (env.ADMIN_SUBS || '').split(',').map((s) => s.trim()).filter(Boolean)
+  return admins.includes(sub)
+}
+
+/** @param {Request} request @param {Env} env @param {string | null} origin @param {URL} url */
+async function handleAdmin(request, env, origin, url) {
+  const admin = await isAdmin(request, env)
+  if (url.pathname === '/admin/me' && request.method === 'GET') {
+    return json({ admin }, 200, origin)
+  }
+  if (!admin) return fail('not allowed', 403, origin)
+
+  if (url.pathname === '/admin/feedback' && request.method === 'GET') {
+    const { results } = await env.DB.prepare(
+      'SELECT id, created_at, kind, message, question_id, cb_id, context, status'
+      + ' FROM feedback ORDER BY created_at DESC LIMIT 500').all()
+    return json({ feedback: results }, 200, origin)
+  }
+  const m = url.pathname.match(/^\/admin\/feedback\/([0-9a-f-]{36})$/)
+  if (m && request.method === 'POST') {
+    const body = await request.json().catch(() => null)
+    const status = body && (body.status === 'open' || body.status === 'done') ? body.status : null
+    if (!status) return fail('status must be open or done', 400, origin)
+    await env.DB.prepare('UPDATE feedback SET status = ? WHERE id = ?').bind(status, m[1]).run()
+    return json({ ok: true }, 200, origin)
+  }
+  if (m && request.method === 'DELETE') {
+    await env.DB.prepare('DELETE FROM feedback WHERE id = ?').bind(m[1]).run()
+    return json({ ok: true }, 200, origin)
+  }
+  return fail('not found', 404, origin)
+}
+
 /**
  * @param {Request} request
  * @param {Env} env
@@ -642,6 +729,12 @@ export default {
       }
       if (url.pathname === '/me' && request.method === 'DELETE') {
         return await handleDelete(request, env, origin)
+      }
+      if (url.pathname === '/feedback' && request.method === 'POST') {
+        return await handleFeedback(request, env, origin)
+      }
+      if (url.pathname.startsWith('/admin/')) {
+        return await handleAdmin(request, env, origin, url)
       }
       return fail('not found', 404, origin)
     } catch (e) {

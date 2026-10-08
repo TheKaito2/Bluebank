@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { RichText } from './RichText'
 import { Explanation } from './Explanation'
 import { BookmarkFilled, Icon, SplitHandle } from './Icon'
+import { FeedbackLink } from './Feedback'
 import type { Annotation, GradeResult, Question } from '../types'
 
 /**
@@ -257,6 +258,9 @@ export function QuestionView(props: Props) {
       ) : (
         <Explanation result={result!} question={question} seconds={seconds} />
       )}
+
+      <FeedbackLink label="Report a problem with this question" className="fb-link q-report"
+                    ctx={{ question_id: question.id, cb_id: question.cb_id, context: 'question', kind: 'bug' }} />
     </div>
   )
 
