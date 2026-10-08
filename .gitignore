@@ -26,3 +26,4 @@ Marketing.md
 
 # Social graphics and the script that builds them. Local only.
 social/
+.wrangler/
