@@ -748,19 +748,19 @@ export default function App() {
 
         <div className="topbar-right">
           {section === 'MATH' && DESMOS_EMBEDDED ? (
-            <button className={showDesmos ? 'tool on' : 'tool'}
+            <button className={showDesmos ? 'tool on' : 'tool'} aria-label="Calculator"
                     onClick={() => setShowDesmos((v) => !v)}>
               <span className="tool-glyphs"><Icon name="calculator" size={21} /></span>
-              <span>Calculator</span>
+              <span className="tool-label"><span className="tool-text">Calculator</span></span>
             </button>
           ) : null}
           {section === 'MATH' && !DESMOS_EMBEDDED ? (
             // No API key of our own yet: hand off to Desmos's free calculator
             // site rather than embedding it.
-            <a className="tool" href="https://www.desmos.com/calculator" target="_blank" rel="noreferrer"
+            <a className="tool" href="https://www.desmos.com/calculator" target="_blank" rel="noreferrer" aria-label="Calculator"
                title="Opens the Desmos graphing calculator in a new tab">
               <span className="tool-glyphs"><Icon name="calculator" size={21} /></span>
-              <span>Calculator</span>
+              <span className="tool-label"><span className="tool-text">Calculator</span></span>
             </a>
           ) : null}
           <button className={showNotes ? 'tool on' : 'tool'}
