@@ -50,6 +50,13 @@ const DIRECTIONS = {
   ],
 } as const
 
+const NAV = [
+  { key: 'home', label: 'Practice', icon: 'grid' },
+  { key: 'review', label: 'Review', icon: 'history' },
+  { key: 'stats', label: 'Stats', icon: 'chart' },
+  { key: 'about', label: 'About', icon: 'info' },
+] as const
+
 export default function App() {
   const [view, setView] =
     useState<'home' | 'stats' | 'about' | 'review' | 'practice' | 'results' | 'inbox'>('home')
@@ -619,19 +626,19 @@ export default function App() {
         ) : null}
         <nav className="tabs">
           <div className="tabs-inner">
-            <span className="brand">
-              <Mark />
+            <button className="brand" onClick={() => setView('home')} aria-label="LightBluePrep home">
+              <Mark size={30} />
               <span className="wordmark">Light<span className="wordmark-blue">Blue</span>Prep</span>
-            </span>
+            </button>
             <div className="tablinks">
-            <button className={view === 'home' ? 'tab on' : 'tab'}
-                    onClick={() => setView('home')}>Practice</button>
-            <button className={view === 'review' ? 'tab on' : 'tab'}
-                    onClick={() => setView('review')}>Review</button>
-            <button className={view === 'stats' ? 'tab on' : 'tab'}
-                    onClick={() => setView('stats')}>Stats</button>
-            <button className={view === 'about' ? 'tab on' : 'tab'}
-                    onClick={() => setView('about')}>About</button>
+              {NAV.map((t) => (
+                <button key={t.key} className={view === t.key ? 'tab on' : 'tab'}
+                        aria-current={view === t.key ? 'page' : undefined}
+                        onClick={() => setView(t.key)}>
+                  <Icon name={t.icon} size={18} strokeWidth={2} />
+                  <span>{t.label}</span>
+                </button>
+              ))}
             </div>
             {/*
               In the nav rather than in a page corner, so Home, Stats and About

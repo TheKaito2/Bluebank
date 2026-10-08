@@ -8,7 +8,7 @@ type Name =
   | 'grip' | 'check' | 'sliders' | 'pin' | 'trash' | 'underline' | 'arrow-right'
   | 'split' | 'expand' | 'shrink' | 'grip-h' | 'dots9' | 'tag' | 'search'
   | 'flame' | 'lock' | 'heart' | 'coffee' | 'trend-up' | 'trend-down' | 'qr'
-  | 'book' | 'target' | 'layers' | 'sigma'
+  | 'book' | 'target' | 'layers' | 'sigma' | 'grid' | 'history' | 'chart' | 'info'
 
 const PATHS: Record<Name, string> = {
   'chevron-left': 'M15 18l-6-6 6-6',
@@ -41,6 +41,10 @@ const PATHS: Record<Name, string> = {
   target: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 16.5a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM12 12.5a.5.5 0 100-1 .5.5 0 000 1z',
   layers: 'M12 3.5l8.5 4.5-8.5 4.5L3.5 8zM3.5 12.5l8.5 4.5 8.5-4.5M3.5 16.5L12 21l8.5-4.5',
   sigma: 'M17.5 5H6.5l6 7-6 7h11',
+  grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+  history: 'M3.5 12a8.5 8.5 0 102.5-6L3.5 8.5M3.5 3.5v5h5M12 7.5V12l3 2',
+  chart: 'M4 20V11M10 20V5M16 20v-6M20.5 20h-17',
+  info: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5.5M12 7.5h.01',
   expand: 'M20 4l-6.5 6.5M20 4v5M20 4h-5M4 20l6.5-6.5M4 20v-5M4 20h5',
   shrink: 'M4 10.5l6.5-6.5M10.5 4v6.5M10.5 10.5H4M20 13.5l-6.5 6.5M13.5 20v-6.5M13.5 13.5H20',
   dots9: 'M6 6h.01M12 6h.01M18 6h.01M6 12h.01M12 12h.01M18 12h.01M6 18h.01M12 18h.01M18 18h.01',

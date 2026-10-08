@@ -34,5 +34,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: Bolder identity: Bricolage Grotesque display type, coloured
   hero band, section panels (pink / light blue), filled progress tiles, dark
   start bar with a chunky Start button.
+- 2026-10-08: No gradients (flat colour, clipped discs); new nav with icon pill
+  tabs; solid-colour page heads for Review (amber), Stats (mint) and About
+  (ink); Stats, Review and About restyled with section panels and cards.
 
 The full history of changes is in the git log.

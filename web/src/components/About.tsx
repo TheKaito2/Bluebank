@@ -7,6 +7,7 @@
  */
 
 import { REPO } from './Github'
+import { PageHead } from './PageHead'
 import { openSupport, supportAvailable } from './Support'
 import { configured } from '../lib/auth'
 import { FeedbackLink } from './Feedback'
@@ -16,14 +17,10 @@ const UPSTREAM = 'https://github.com/jackwangxyw/Bluebank'
 export function About() {
   const canSignIn = configured
   return (
+    <>
+    <PageHead tone="ink" eyebrow="Free · open source · no ads" title={<>About Light<span className="phead-blue">Blue</span>Prep</>}
+              sub="Every official College Board practice question, free, in one place you can filter, track and re-drill." />
     <div className="about">
-      <section className="about-block">
-        <h1 className="about-h1">About LightBluePrep</h1>
-        <p className="about-lead">
-          Every official College Board practice question, free, in one place you
-          can filter, track and re-drill.
-        </p>
-      </section>
 
       <section className="about-block">
         <h2 className="about-h2">How it works</h2>
@@ -114,5 +111,6 @@ export function About() {
         </p>
       </section>
     </div>
+    </>
   )
 }

@@ -15,10 +15,11 @@
  * nothing is loaded until asked for; on the static build that is a cache hit,
  * since you only ever answered questions you had already downloaded.
  */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import * as api from '../api'
 import { QuestionDetail } from './QuestionDetail'
 import { Icon } from './Icon'
+import { PageHead } from './PageHead'
 import { describeSet } from '../lib/setlabel'
 import { duration, formatClock } from '../lib/pacing'
 import type { PracticeSet, Section, SetItem } from '../types'
@@ -153,19 +154,28 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
     </section>
   ) : null
 
-  if (error) return <div className="review"><p className="review-empty">{error}</p></div>
-  if (!items) return <div className="review"><p className="review-empty">Loading…</p></div>
+  const head = (aside?: ReactNode) => (
+    <PageHead tone="amber" eyebrow="Your history" title="Review"
+              sub="Every question you have answered, grouped by day, with the explanation one tap away.">
+      {aside}
+    </PageHead>
+  )
+
+  if (error) return <>{head()}<div className="review"><p className="review-empty">{error}</p></div></>
+  if (!items) return <>{head()}<div className="review"><p className="review-empty">Loading…</p></div></>
 
   if (!items.length) {
     return (
-      <div className="review">
-        <h1 className="about-h1">Review</h1>
-        {setHistory}
-        <p className="review-empty">
-          Nothing here yet. Answer some questions and they'll show up, with how
-          long each one took.
-        </p>
-      </div>
+      <>
+        {head()}
+        <div className="review">
+          {setHistory}
+          <p className="review-empty">
+            Nothing here yet. Answer some questions and they'll show up, with how
+            long each one took.
+          </p>
+        </div>
+      </>
     )
   }
 
@@ -201,18 +211,20 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
   const total = items.reduce((sum, i) => sum + (i.last_seconds ?? 0), 0)
 
   return (
+    <>
+    {head(
+      <div className="htiles">
+        <div className="htile"><span className="htile-n">{items.length.toLocaleString()}</span><span className="htile-l">answered</span></div>
+        <div className="htile"><span className="htile-n">{items.length ? Math.round((correct / items.length) * 100) : 0}<small>%</small></span><span className="htile-l">correct</span></div>
+        <div className="htile"><span className="htile-n">{duration(Math.round(total))}</span><span className="htile-l">spent</span></div>
+      </div>,
+    )}
     <div className="review">
-      <h1 className="about-h1">Review</h1>
-      <p className="review-sub">
-        {items.length.toLocaleString()} answered · {correct.toLocaleString()} correct ·{' '}
-        {duration(Math.round(total))} spent
-      </p>
-
       {setHistory}
 
-      <div className="chips review-filter">
+      <div className="seg review-filter" role="group" aria-label="Show">
         {FILTERS.map(([key, label]) => (
-          <button key={key} className={filter === key ? 'chip on' : 'chip'}
+          <button key={key} className={filter === key ? 'seg-b on' : 'seg-b'}
                   aria-pressed={filter === key}
                   onClick={() => setFilter(key)}>{label}</button>
         ))}
@@ -223,8 +235,18 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
       ) : null}
 
       {sections.map((group) => (
-        <section key={group.section} className="review-section">
-          <h2 className="review-sectionhead">{SECTION_LABEL[group.section]}</h2>
+        <section key={group.section} className={`review-section spanel sec-${group.section}`}>
+          <header className="spanel-h">
+            <span className="spanel-ico">
+              <Icon name={group.section === 'RW' ? 'book' : 'sigma'} size={24} strokeWidth={2} />
+            </span>
+            <div className="spanel-txt">
+              <h2 className="spanel-t">{SECTION_LABEL[group.section]}</h2>
+              <p className="spanel-sub">
+                {group.days.reduce((n, d) => n + d.rows.length, 0)} answered
+              </p>
+            </div>
+          </header>
           {group.days.map((day) => (
             <div key={day.label} className="review-group">
               <h3 className="review-day">{day.label}</h3>
@@ -271,5 +293,6 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
         </section>
       ))}
     </div>
+    </>
   )
 }

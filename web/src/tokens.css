@@ -43,6 +43,14 @@
   --streak-500: #f2771a;
   --streak-700: #a84a07;
 
+  /* ---- mint: the Stats page ---- */
+  --mint-50: #effaf4;
+  --mint-100: #dcf3e6;
+  --mint-200: #b8e6cc;
+  --mint-500: #2fb36f;
+  --mint-600: #1b8a50;
+  --mint-700: #146c3e;
+
   /* ---- neutrals (one cool grey ramp, no warm greys) ---- */
   --n-0: #ffffff;
   --n-25: #fafbfc;

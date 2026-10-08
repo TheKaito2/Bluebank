@@ -98,6 +98,7 @@ export function SupportLink() {
   return (
     <button type="button" className="supportlink" onClick={openSupport}
             title="Donations pay for the domain and hosting">
+      <Icon name="heart" size={15} strokeWidth={2.2} />
       Support
     </button>
   )

@@ -50,9 +50,22 @@ Numbers use `font-variant-numeric: tabular-nums` so they don't jitter.
 - **Section icons:** `book` for Reading and Writing, `sigma` for Math. Use them wherever a section is named.
 
 ## Colour coverage
-Colour sits on surfaces, not just accents. Aim for about 20% of the screen:
-- **Hero band:** brand-blue gradient with pink and blue light pools.
-- **Section panels:** each section is a full tinted panel (`--sec-100` → `--sec-50`) holding white cards.
+Colour sits on surfaces, not just accents. Aim for about 20% of the screen.
+
+**No gradients.** Use flat fills only. For decoration, use solid discs clipped by a band's edge.
+
+**Every page has a tone**, set by a solid header band (`PageHead`, `.phead.tone-*`):
+
+| Page | Tone |
+|---|---|
+| Practice (Home) | light blue (`--brand-100`) |
+| Review | amber (`--streak-100`) |
+| Stats | mint (`--mint-100`) |
+| About | dark ink (`--n-900`) |
+
+What colour sits where:
+- **Hero band:** solid `--brand-100` with a pink and a blue disc.
+- **Section panels:** each section is a solid `--sec-100` panel holding white cards. The same panel is used on Home, Stats and Review.
 - **Progress tiles:** the streak and coverage tiles are filled (amber and pink).
 - **Start bar:** dark ink, with a light-blue chunky button.
 
@@ -65,6 +78,10 @@ The primary call to action is chunky (Duolingo-style):
 - **Pressed:** it presses down 4px.
 
 Secondary buttons are quiet pills. On the dark start bar, use translucent white.
+
+## Navigation
+- **Desktop:** a 66px white bar with the display-font wordmark (clicking it goes home), then icon + label pill tabs. The active tab is filled ink with a light-blue icon. A pink Support pill sits on the right.
+- **Phone:** the tabs become a bottom bar with icons over labels, and the active one sits in a light-blue pill.
 
 ## Patterns
 - **Cards** only where they group something you act on (topic cards, progress). Otherwise use spacing and hairlines.

@@ -1,5 +1,6 @@
 import { Fragment, useMemo } from 'react'
 import { Icon } from './Icon'
+import { PageHead } from './PageHead'
 import type { Filters, Section, TaxonomyRow } from '../types'
 
 interface Props {
@@ -128,11 +129,13 @@ export function Stats({ taxonomy, onPractice }: Props) {
   const coverage = pct(overall.seen, overall.n)
 
   return (
-    <div className="stats">
+    <>
+    <PageHead tone="mint" eyebrow="Your progress" title="Stats"
+              sub="Where you stand, where you are losing points, and what to drill next.">
       {/* Single headlines are stat tiles, not charts. */}
       <section className="hero-stats">
         <div className="tile tile-lead">
-          <span className="tile-l">Overall accuracy</span>
+          <span className="tile-l">Accuracy</span>
           <span className={`tile-n ${accuracy === null ? 'none' : grade(accuracy)}`}>
             {accuracy === null ? '—' : `${accuracy}%`}
           </span>
@@ -162,6 +165,8 @@ export function Stats({ taxonomy, onPractice }: Props) {
           </span>
         </div>
       </section>
+    </PageHead>
+    <div className="stats">
 
       <section className="block">
         <div className="block-head">
@@ -170,7 +175,7 @@ export function Stats({ taxonomy, onPractice }: Props) {
         {focus.length ? (
           <ul className="focus">
             {focus.map((k) => (
-              <li key={k.section + k.domain + k.code} className="focus-row">
+              <li key={k.section + k.domain + k.code} className={`focus-row sec-${k.section}`}>
                 <div className="focus-id">
                   <span className="focus-name">{k.name}</span>
                   <span className="focus-where">{k.domainName}</span>
@@ -193,7 +198,7 @@ export function Stats({ taxonomy, onPractice }: Props) {
             </p>
             <ul className="focus">
               {untouched.map((k) => (
-                <li key={k.section + k.domain + k.code} className="focus-row">
+                <li key={k.section + k.domain + k.code} className={`focus-row sec-${k.section}`}>
                   <div className="focus-id">
                     <span className="focus-name">{k.name}</span>
                     <span className="focus-where">{k.domainName}</span>
@@ -221,9 +226,9 @@ export function Stats({ taxonomy, onPractice }: Props) {
           {domainList.map((d, i) => (
             <Fragment key={d.section + d.code}>
               {i === 0 || domainList[i - 1].section !== d.section ? (
-                <li className="dbar-group">{SECTION_NAME[d.section]}</li>
+                <li className={`dbar-group sec-${d.section}`}>{SECTION_NAME[d.section]}</li>
               ) : null}
-            <li className="dbar">
+            <li className={`dbar sec-${d.section}`}>
               <span className="dbar-name" title={d.name}>{d.name}</span>
               <span className="dbar-track" title={`${d.seen} of ${d.n} attempted`}>
                 <span className="dbar-total" style={{ width: `${(d.n / biggestDomain) * 100}%` }}>
@@ -247,7 +252,7 @@ export function Stats({ taxonomy, onPractice }: Props) {
           {DIFFICULTIES.map((f) => {
             const t = difficulty.get(f.key) ?? empty()
             return (
-              <li key={f.key} className="dbar">
+              <li key={f.key} className={`dbar d-${f.key}`}>
                 <span className="dbar-name">{f.label}</span>
                 <span className="dbar-track" title={`${t.seen} of ${t.n} attempted`}>
                   <span className="dbar-total" style={{ width: '100%' }}>
@@ -266,14 +271,19 @@ export function Stats({ taxonomy, onPractice }: Props) {
       {(['RW', 'MATH'] as Section[]).map((section) => {
         const t = sections.get(section) ?? empty()
         return (
-          <section className="block" key={section}>
-            <div className="block-head">
-              <h2 className="h">{SECTION_NAME[section]}</h2>
-              <span className="block-meta">
-                {t.seen.toLocaleString()} of {t.n.toLocaleString()} attempted
+          <section className={`block spanel sec-${section}`} key={section}>
+            <header className="spanel-h">
+              <span className="spanel-ico">
+                <Icon name={section === 'RW' ? 'book' : 'sigma'} size={24} strokeWidth={2} />
               </span>
+              <div className="spanel-txt">
+                <h2 className="spanel-t">{SECTION_NAME[section]}</h2>
+                <p className="spanel-sub">
+                  {t.seen.toLocaleString()} of {t.n.toLocaleString()} attempted
+                </p>
+              </div>
               <Accuracy t={t} />
-            </div>
+            </header>
             <ul className="rows">
               {domainList.filter((d) => d.section === section).map((d) => (
                 <li key={d.code} className="domain-group">
@@ -305,5 +315,6 @@ export function Stats({ taxonomy, onPractice }: Props) {
         )
       })}
     </div>
+    </>
   )
 }
