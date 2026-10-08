@@ -28,5 +28,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: Topic-first Home (question list removed; ID search opens a
   question directly), streaks and an estimated-score trend (lib/progress.ts,
   /api/history), Support popup with Ko-fi, Buy Me a Coffee and PromptPay.
+- 2026-10-08: Design system (web/src/tokens.css, DESIGN.md): section colours
+  (Reading and Writing pink, Math light blue), icons instead of emoji,
+  asymmetric progress layout, loading skeletons.
 
 The full history of changes is in the git log.

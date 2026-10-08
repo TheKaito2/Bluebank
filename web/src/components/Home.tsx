@@ -69,6 +69,8 @@ interface DomainRow {
   n: number; seen: number; correct: number; skills: SkillRow[]
 }
 
+const SECTION_ICON = { RW: 'book', MATH: 'sigma' } as const
+
 const pct = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0)
 const accClass = (p: number) => (p >= 70 ? 'good' : p >= 50 ? 'mid' : 'poor')
 
@@ -174,6 +176,8 @@ export function Home({
   const optionCount = (value.size ? 1 : 0) + (value.excludeLive ? 1 : 0) + (order !== 'mixed' ? 1 : 0)
     + (value.difficulties?.length ? 1 : 0) + (which !== 'all' ? 1 : 0)
 
+  const pickedSections = value.section ? [value.section]
+    : [...new Set(domains.filter((d) => d.skills.some((s) => ticked.has(s.code))).map((d) => d.section))]
   const pickedNames = domains.flatMap((d) => d.skills.filter((s) => ticked.has(s.code)).map((s) => s.name))
   const summary = pickedNames.length
     ? pickedNames.length === 1 ? pickedNames[0] : `${pickedNames[0]} + ${pickedNames.length - 1} more`
@@ -275,8 +279,9 @@ export function Home({
           <div className="seg sectabs" role="group" aria-label="Section">
             {tabs.map((t) => (
               <button key={t.label} aria-pressed={value.section === t.key}
-                      className={value.section === t.key ? 'seg-b on' : 'seg-b'}
+                      className={`seg-b${t.key ? ` sec-${t.key}` : ''}${value.section === t.key ? ' on' : ''}`}
                       onClick={() => onChange({ ...value, section: t.key, domains: undefined, skills: undefined })}>
+                {t.key ? <Icon name={SECTION_ICON[t.key]} size={15} strokeWidth={2} /> : null}
                 {t.label}
               </button>
             ))}
@@ -285,12 +290,24 @@ export function Home({
         </div>
 
         {!domains.length ? (
-          <p className="topics-loading">Loading topics from College Board…</p>
+          <div className="dgrid" aria-busy="true" aria-label="Loading topics">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="dcard dskel">
+                <span className="skel skel-t" />
+                {[0, 1, 2].map((j) => <span key={j} className="skel skel-row" />)}
+              </div>
+            ))}
+          </div>
         ) : null}
 
         {domains.length ? SECTIONS.filter((s) => !value.section || s.key === value.section).map((sec) => (
-          <section key={sec.key} className="topics" aria-label={sec.label}>
-            {!value.section ? <h3 className="topics-cap">{sec.label}</h3> : null}
+          <section key={sec.key} className={`topics sec-${sec.key}`} aria-label={sec.label}>
+            {!value.section ? (
+              <h3 className="topics-cap">
+                <Icon name={SECTION_ICON[sec.key]} size={15} strokeWidth={2.2} />
+                {sec.label}
+              </h3>
+            ) : null}
             <div className="dgrid">
               {domains.filter((d) => d.section === sec.key).map((d) => {
                 const on = d.skills.filter((s) => ticked.has(s.code)).length
@@ -344,7 +361,10 @@ export function Home({
       <div className="startbar2">
         <div className="startbar2-in">
           <div className="sb-sum">
-            <strong>{summary}</strong>
+            <strong>
+              {pickedSections.map((s) => <i key={s} className={`sb-dot sec-${s}`} aria-hidden="true" />)}
+              {summary}
+            </strong>
             <span>
               {loading ? 'Counting…' : `${count.toLocaleString()} question${count === 1 ? '' : 's'}`}
               {!loading && pool.done ? ` · ${pool.done.toLocaleString()} done` : ''}

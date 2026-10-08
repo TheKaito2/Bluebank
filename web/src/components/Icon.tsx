@@ -7,6 +7,8 @@ type Name =
   | 'bookmark' | 'highlighter' | 'more' | 'close' | 'note' | 'calculator'
   | 'grip' | 'check' | 'sliders' | 'pin' | 'trash' | 'underline' | 'arrow-right'
   | 'split' | 'expand' | 'shrink' | 'grip-h' | 'dots9' | 'tag' | 'search'
+  | 'flame' | 'lock' | 'heart' | 'coffee' | 'trend-up' | 'trend-down' | 'qr'
+  | 'book' | 'target' | 'layers' | 'sigma'
 
 const PATHS: Record<Name, string> = {
   'chevron-left': 'M15 18l-6-6 6-6',
@@ -28,6 +30,17 @@ const PATHS: Record<Name, string> = {
   'arrow-right': 'M5 12h14M13 6l6 6-6 6',
   split: 'M12 4v16',
   search: 'M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-4.2-4.2',
+  flame: 'M12 3c.6 3.2 4.8 5.3 4.8 10.2A4.8 4.8 0 0112 18a4.8 4.8 0 01-4.8-4.8c0-2.2 1.2-3.7 2.3-4.7.2 1.8 1 2.9 2.1 3.5.4-3 .1-5.6.4-9zM12 18v3',
+  lock: 'M6 11h12v9H6zM8.5 11V7.5a3.5 3.5 0 017 0V11M12 15v2',
+  heart: 'M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0112 7.3a4.2 4.2 0 017.5 2.5C19.5 15.4 12 20 12 20z',
+  coffee: 'M4 9h12v5a5 5 0 01-5 5H9a5 5 0 01-5-5zM16 10.5h1.5a2.5 2.5 0 010 5H16M8 3.5v2.5M12 3.5v2.5',
+  'trend-up': 'M4 16.5l5-5 4 4 7-7.5M15 8h5v5',
+  'trend-down': 'M4 7.5l5 5 4-4 7 7.5M15 16h5v-5',
+  qr: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM7 7h.01M17 7h.01M7 17h.01M14 14h2.5v2.5H14zM18.5 14H20M14 19h.01M17.5 18.5H20V20M20 16.5v.5',
+  book: 'M12 6.5C10.5 5.2 8.3 4.5 4 4.5v13c4.3 0 6.5.7 8 2 1.5-1.3 3.7-2 8-2v-13c-4.3 0-6.5.7-8 2zM12 6.5v13',
+  target: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 16.5a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM12 12.5a.5.5 0 100-1 .5.5 0 000 1z',
+  layers: 'M12 3.5l8.5 4.5-8.5 4.5L3.5 8zM3.5 12.5l8.5 4.5 8.5-4.5M3.5 16.5L12 21l8.5-4.5',
+  sigma: 'M17.5 5H6.5l6 7-6 7h11',
   expand: 'M20 4l-6.5 6.5M20 4v5M20 4h-5M4 20l6.5-6.5M4 20v-5M4 20h5',
   shrink: 'M4 10.5l6.5-6.5M10.5 4v6.5M10.5 10.5H4M20 13.5l-6.5 6.5M13.5 20v-6.5M13.5 13.5H20',
   dots9: 'M6 6h.01M12 6h.01M18 6h.01M6 12h.01M12 12h.01M18 12h.01M6 18h.01M12 18h.01M18 18h.01',

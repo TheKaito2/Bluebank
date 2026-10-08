@@ -50,20 +50,20 @@ export function SupportHost() {
         </div>
         <p className="fb-p sp-lead">
           Donations only pay for the domain and hosting. Every question stays free
-          for everyone, whether you chip in or not. 💙
+          for everyone, whether you chip in or not.
         </p>
 
         <div className="sp-options">
           {DONATE ? (
             <a className="sp-opt" href={DONATE} target="_blank" rel="noreferrer">
-              <span className="sp-badge sp-kofi">K</span>
+              <span className="sp-badge sp-kofi"><Icon name="heart" size={19} strokeWidth={2} /></span>
               <span className="sp-text"><b>Ko-fi</b><small>Card or PayPal</small></span>
               <Icon name="arrow-right" size={16} />
             </a>
           ) : null}
           {DONATE_ALT ? (
             <a className="sp-opt" href={DONATE_ALT} target="_blank" rel="noreferrer">
-              <span className="sp-badge sp-bmc">☕</span>
+              <span className="sp-badge sp-bmc"><Icon name="coffee" size={19} strokeWidth={2} /></span>
               <span className="sp-text"><b>Buy Me a Coffee</b><small>Pay by card</small></span>
               <Icon name="arrow-right" size={16} />
             </a>
@@ -71,7 +71,7 @@ export function SupportHost() {
           {PROMPTPAY_QR ? (
             <button type="button" className={showQr ? 'sp-opt on' : 'sp-opt'}
                     aria-expanded={showQr} onClick={() => setShowQr((v) => !v)}>
-              <span className="sp-badge sp-pp">฿</span>
+              <span className="sp-badge sp-pp"><Icon name="qr" size={19} strokeWidth={2} /></span>
               <span className="sp-text">
                 <b>PromptPay <span lang="th">· สำหรับคนไทย</span></b>
                 <small>Scan with any Thai banking app</small>
