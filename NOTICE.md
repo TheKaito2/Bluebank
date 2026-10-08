@@ -43,5 +43,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: Removed the upstream author's Desmos API key (Desmos keys are
   per-developer). Key now comes from VITE_DESMOS_KEY; without one the
   Calculator button opens desmos.com/calculator in a new tab.
+- 2026-10-08: Own Desmos API key (free Personal plan) set, embedded calculator
+  back on.
 
 The full history of changes is in the git log.
