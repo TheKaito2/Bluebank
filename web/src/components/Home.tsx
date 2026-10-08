@@ -215,7 +215,7 @@ export function Home({
         {showFilters ? (
           <div className="sheet-scrim" onClick={() => setShowFilters(false)} />
         ) : null}
-        <aside className={showFilters ? 'side open' : 'side'} aria-label="Filters">
+        <aside id="filters" className={showFilters ? 'side open' : 'side'} aria-label="Filters">
           <div className="sheet-head">
             <span className="sheet-t">Filters</span>
             {activeFilters ? (
@@ -227,10 +227,10 @@ export function Home({
               <Icon name="close" size={18} />
             </button>
           </div>
-          <div className="seg" role="tablist" aria-label="Section">
+          <div className="seg" role="group" aria-label="Section">
             {tabs.map((t) => (
-              <button key={t.label} role="tab"
-                      aria-selected={value.section === t.key}
+              <button key={t.label}
+                      aria-pressed={value.section === t.key}
                       className={value.section === t.key ? 'seg-b on' : 'seg-b'}
                       onClick={() => onChange({
                         ...value, section: t.key, domains: undefined, skills: undefined,
@@ -440,7 +440,7 @@ export function Home({
                      onChange={(e) => setQuery(e.target.value)} />
             </label>
             <button className="btn filters-btn" onClick={() => setShowFilters((x) => !x)}
-                    aria-expanded={showFilters}>
+                    aria-expanded={showFilters} aria-controls="filters">
               <Icon name="sliders" size={16} />
               Filters{activeFilters ? ` · ${activeFilters}` : ''}
             </button>
@@ -459,9 +459,9 @@ export function Home({
               {ORDERS.map((o) => <option key={o.key} value={o.key}>{o.label}</option>)}
             </select>
 
-            <div className="seg sm" role="radiogroup" aria-label="Order">
+            <div className="seg sm" role="group" aria-label="Order">
               {ORDERS.map((o) => (
-                <button key={o.key} role="radio" aria-checked={order === o.key}
+                <button key={o.key} aria-pressed={order === o.key}
                         className={order === o.key ? 'seg-b on' : 'seg-b'}
                         // Random again reshuffles, so it doubles as a shuffle button.
                         onClick={() => onOrder(o.key)}>
@@ -506,7 +506,7 @@ export function Home({
           ) : null}
 
           {rows.length ? (
-            <div className="qlist" role="list">
+            <div className="qlist">
               <div className="qrow qrow-head" aria-hidden="true">
                 <span>#</span><span>Skill</span><span>Level</span><span>Status</span>
                 <span className="qrow-when">Last</span>
@@ -514,7 +514,7 @@ export function Home({
               {rows.map(([q, i]) => {
                 const st = cellState(q)
                 return (
-                  <button key={q.id} role="listitem" className="qrow" onClick={() => onOpen(i)}>
+                  <button key={q.id} className="qrow" onClick={() => onOpen(i)}>
                     <span className="qrow-n">{i + 1}</span>
                     <span className="qrow-skill">
                       <span className="qrow-s">{q.skill_name}</span>

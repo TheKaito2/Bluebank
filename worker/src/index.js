@@ -599,7 +599,7 @@ async function handleFeedback(request, env, origin) {
   if (!body || typeof body !== 'object') return fail('bad request', 400, origin)
   // Honeypot: a field people never see. Bots that fill every input get a fake
   // success and nothing is written.
-  if (body.website) return json({ ok: true }, 200, origin)
+  if (body.fax_ref) return json({ ok: true }, 200, origin)
 
   const kind = FEEDBACK_KINDS.includes(body.kind) ? body.kind : null
   const message = typeof body.message === 'string' ? body.message.trim() : ''
@@ -610,7 +610,14 @@ async function handleFeedback(request, env, origin) {
 
   const count = await env.DB.prepare('SELECT COUNT(*) AS n FROM feedback').first()
   if (count && Number(count.n) >= FEEDBACK_MAX_ROWS) {
-    return fail('feedback inbox is full, try again later', 503, origin)
+    // Make room by dropping the oldest handled messages; refuse only if the
+    // inbox is full of open ones.
+    const freed = await env.DB.prepare(
+      "DELETE FROM feedback WHERE id IN (SELECT id FROM feedback WHERE status = 'done'"
+      + ' ORDER BY created_at LIMIT 100)').run()
+    if (!freed.meta || !freed.meta.changes) {
+      return fail('feedback inbox is full, try again later', 503, origin)
+    }
   }
 
   await env.DB.prepare(
@@ -633,12 +640,21 @@ async function isAdmin(request, env) {
 
 /** @param {Request} request @param {Env} env @param {string | null} origin @param {URL} url */
 async function handleAdmin(request, env, origin, url) {
+  const sentToken = (request.headers.get('Authorization') || '').startsWith('Bearer ')
   const admin = await isAdmin(request, env)
+  if (sentToken && !admin && !(await subForRequest(request, env))) {
+    return fail('not signed in', 401, origin)
+  }
   if (url.pathname === '/admin/me' && request.method === 'GET') {
     return json({ admin }, 200, origin)
   }
   if (!admin) return fail('not allowed', 403, origin)
 
+  if (url.pathname === '/admin/feedback' && request.method === 'DELETE'
+      && url.searchParams.get('status') === 'done') {
+    await env.DB.prepare("DELETE FROM feedback WHERE status = 'done'").run()
+    return json({ ok: true }, 200, origin)
+  }
   if (url.pathname === '/admin/feedback' && request.method === 'GET') {
     const { results } = await env.DB.prepare(
       'SELECT id, created_at, kind, message, question_id, cb_id, context, status'

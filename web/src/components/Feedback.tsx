@@ -51,13 +51,19 @@ export function FeedbackHost() {
     return () => window.removeEventListener(EVENT, onOpen)
   }, [])
 
+  const isOpen = ctx !== null
   useEffect(() => {
-    if (!ctx) return
+    if (!isOpen) return
+    // Back to whatever opened the dialog when it closes.
+    const opener = document.activeElement as HTMLElement | null
     box.current?.focus()
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setCtx(null) }
     document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [ctx])
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      opener?.focus?.()
+    }
+  }, [isOpen])
 
   if (!ctx || !fb.available) return null
 
@@ -93,9 +99,9 @@ export function FeedbackHost() {
           </div>
         ) : (
           <form className="fb-body" onSubmit={submit}>
-            <div className="seg fb-kind" role="radiogroup" aria-label="Type">
+            <div className="seg fb-kind" role="group" aria-label="Type">
               {(['bug', 'comment'] as const).map((k) => (
-                <button key={k} type="button" role="radio" aria-checked={kind === k}
+                <button key={k} type="button" aria-pressed={kind === k}
                         className={kind === k ? 'seg-b on' : 'seg-b'}
                         onClick={() => setKind(k)}>
                   {k === 'bug' ? 'Report a bug' : 'Comment or idea'}
@@ -114,7 +120,7 @@ export function FeedbackHost() {
                         : 'What would make LightBluePrep better?'} />
             {/* Honeypot: hidden from people, filled by bots. */}
             <input className="fb-hp" tabIndex={-1} autoComplete="off" aria-hidden="true"
-                   value={website} onChange={(e) => setWebsite(e.target.value)} name="website" />
+                   value={website} onChange={(e) => setWebsite(e.target.value)} name="fax_ref" />
 
             <div className="fb-foot">
               <span className="fb-note">

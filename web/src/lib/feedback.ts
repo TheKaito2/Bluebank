@@ -39,7 +39,8 @@ export async function send(
 ): Promise<void> {
   await ok(await request('/feedback', {
     method: 'POST',
-    body: JSON.stringify({ kind, message, ...ctx, cb_id: ctx.cb_id ?? undefined, website }),
+    // ctx goes first: the dialog's chosen kind must win over the opener's default.
+    body: JSON.stringify({ ...ctx, kind, message, cb_id: ctx.cb_id ?? undefined, fax_ref: website }),
   }))
 }
 
@@ -59,6 +60,10 @@ export async function setStatus(id: string, status: 'open' | 'done'): Promise<vo
   await ok(await request(`/admin/feedback/${id}`, {
     method: 'POST', body: JSON.stringify({ status }),
   }))
+}
+
+export async function removeDone(): Promise<void> {
+  await ok(await request('/admin/feedback?status=done', { method: 'DELETE' }))
 }
 
 export async function remove(id: string): Promise<void> {

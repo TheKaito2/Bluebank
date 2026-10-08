@@ -23,5 +23,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   About); privacy page lists the donation platforms.
 - 2026-10-08: Question ID search on the home list; anonymous bug/feedback
   form (Worker /feedback, rate limited) with an owner-only inbox.
+- 2026-10-08: Security headers (CSP, frame blocking) via web/public/_headers;
+  review fixes (feedback kind, inbox cap, privacy wording, a11y roles).
 
 The full history of changes is in the git log.

@@ -37,11 +37,20 @@ export function Inbox() {
         <h1 className="about-h1">Feedback inbox</h1>
         <button className="btn" onClick={load}>Refresh</button>
       </div>
-      <p className="qsub">{openCount} open · {(items ?? []).length} total</p>
+      <p className="qsub">
+        {openCount} open · {(items ?? []).length} total
+        {(items ?? []).length >= 500 ? ' (showing the newest 500)' : ''}
+      </p>
+      {(items ?? []).some((i) => i.status === 'done') ? (
+        <button className="link"
+                onClick={() => { if (confirm('Delete every message marked done?')) act(fb.removeDone) }}>
+          Delete all done
+        </button>
+      ) : null}
 
-      <div className="seg sm inbox-seg" role="radiogroup" aria-label="Show">
+      <div className="seg sm inbox-seg" role="group" aria-label="Show">
         {(['open', 'done', 'all'] as const).map((s) => (
-          <button key={s} role="radio" aria-checked={show === s}
+          <button key={s} aria-pressed={show === s}
                   className={show === s ? 'seg-b on' : 'seg-b'} onClick={() => setShow(s)}>
             {s === 'open' ? 'Open' : s === 'done' ? 'Done' : 'All'}
           </button>

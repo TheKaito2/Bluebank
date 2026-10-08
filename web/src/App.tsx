@@ -183,7 +183,12 @@ export default function App() {
 
   // Landing back on Home reloads the list: answers since then change its status
   // marks, and opening one question or a set replaced `items` with just those.
-  useEffect(() => { if (view === 'home') return loadList() }, [view, dataVersion])
+  const mounted = useRef(false)
+  useEffect(() => {
+    // The effect above already loaded on mount.
+    if (!mounted.current) { mounted.current = true; return }
+    if (view === 'home') return loadList()
+  }, [view, dataVersion])
 
   useEffect(() => {
     if (!practising || !current) { setQuestion(null); return }
@@ -538,6 +543,8 @@ export default function App() {
     function onKey(event: KeyboardEvent) {
       const tag = (event.target as HTMLElement)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
+      // The feedback dialog sits over the question; keys belong to it.
+      if (document.querySelector('.fb-dialog')) return
       if (event.key === 'ArrowRight') go(index + 1)
       if (event.key === 'ArrowLeft') go(index - 1)
       if (event.key === 'Escape') {

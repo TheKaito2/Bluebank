@@ -47,7 +47,8 @@ export function About() {
         <p className="about-p">
           No account needed. <strong>No ads, no analytics, no tracking.</strong>{' '}
           Your answers, notes and marks are saved in your own browser and never
-          leave it{canSignIn ? ' unless you sign in' : ''}.
+          leave it{canSignIn ? ' unless you sign in' : ''}. Feedback you send is
+          stored anonymously, with no name, email or account attached.
         </p>
         <p className="about-p">
           Your browser talks to College Board to fetch the questions, and to
