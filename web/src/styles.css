@@ -2348,3 +2348,26 @@ a.tool { text-decoration: none; color: inherit; }
   /* Anchored to the button it ran off the left edge; pin it under the bar. */
   .qinfo-pop { position: fixed; top: 62px; left: 12px; right: 12px; min-width: 0; }
 }
+
+/* ---- Bulb, the mascot (components/Mascot.tsx) ---- */
+.bulb { display: block; overflow: visible; }
+.bulb-glass, .bulb-limb-fill { fill: var(--brand-500); }
+.bulb-base { fill: var(--brand-700); }
+.bulb-limb { fill: none; stroke: var(--brand-500); stroke-width: 9; stroke-linecap: round; }
+.bulb-check { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.bulb-ink { fill: var(--n-900); }
+.bulb-line { fill: none; stroke: var(--n-900); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.bulb-shine { fill: #fff; }
+.bulb-cheek { fill: var(--rw-200); }
+.bulb-sweat { fill: var(--brand-200); }
+.bulb-flame { fill: var(--streak-500); }
+.bulb-ray { fill: none; stroke: var(--streak-500); stroke-width: 4; stroke-linecap: round; }
+.hero2-copy { position: relative; }
+.hero2-bulb { position: absolute; top: 34px; right: 0; transform: rotate(6deg); }
+.review-bulb { margin: var(--sp-8) auto 0; }
+.review-bulb + .review-empty { margin-top: var(--sp-3); text-align: center; }
+.mlog-practice { position: relative; }
+.mlog-bulb { position: absolute; top: -14px; right: 14px; }
+@media (max-width: 819px) {
+  .hero2-bulb { width: 72px; height: auto; top: 50px; right: 4px; }
+}

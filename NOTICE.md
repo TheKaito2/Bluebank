@@ -52,5 +52,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   drawings); mistake log asked inline only after a wrong answer, drawer
   removed. Review: Marked filter (answered or not) and mistake-type chips
   under "Has a note".
+- 2026-10-08: New logo (Bulb's face) and mascot Bulb in four moods, drawn
+  as SVG from concept art made with OpenAI image generation; new link
+  preview card (source in web/og/).
 
 The full history of changes is in the git log.

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Icon } from './Icon'
+import { Mascot } from './Mascot'
 import { FeedbackLink } from './Feedback'
 import { ProgressStrip } from './ProgressStrip'
 import { SPEEDS, setSeconds, formatClock } from '../lib/pacing'
@@ -225,6 +226,7 @@ export function Home({
       <section className="hero2" aria-label="Overview">
         <div className="hero2-in">
           <div className="hero2-copy">
+            <Mascot className="hero2-bulb" size={104} />
             <span className="eyebrow">
               {totals.all ? `${totals.all.toLocaleString()} official questions` : 'Official questions'} · always free
             </span>

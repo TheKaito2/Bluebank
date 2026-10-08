@@ -20,6 +20,7 @@ import * as api from '../api'
 import { QuestionDetail } from './QuestionDetail'
 import { Icon } from './Icon'
 import { PageHead } from './PageHead'
+import { Mascot } from './Mascot'
 import { TAG_LABEL } from './MistakeFields'
 import { describeSet } from '../lib/setlabel'
 import { duration, formatClock } from '../lib/pacing'
@@ -175,6 +176,7 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
         {head()}
         <div className="review">
           {setHistory}
+          <Mascot className="review-bulb" size={96} />
           <p className="review-empty">
             Nothing here yet. Answer some questions and they'll show up, with how
             long each one took.
@@ -251,7 +253,10 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
       ) : null}
 
       {!shown.length ? (
-        <p className="review-empty">Nothing matches this filter.</p>
+        <>
+          <Mascot className="review-bulb" mood="oops" size={72} />
+          <p className="review-empty">Nothing matches this filter.</p>
+        </>
       ) : null}
 
       {sections.map((group) => (

@@ -34,15 +34,24 @@
       }
       .go:active { transform: translateY(4px); box-shadow: none; }
       .go:focus-visible { outline: 3px solid #1c1f23; outline-offset: 3px; }
+      .hero { display: flex; align-items: flex-end; justify-content: center; gap: 4px; margin-top: 24px; }
+      .hero .code { margin-top: 0; }
+      .bulb { flex: none; width: clamp(84px, 22vw, 128px); height: auto; }
+      .bulb-glass { fill: #3aa3ec; } .bulb-base { fill: #1479c2; }
+      .bulb-limb { fill: none; stroke: #3aa3ec; stroke-width: 9; stroke-linecap: round; }
+      .bulb-check { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+      .bulb-ink { fill: #1c1f23; } .bulb-shine { fill: #fff; } .bulb-cheek { fill: #f6c4da; } .bulb-sweat { fill: #8ec8f0; }
+      .bulb-line { fill: none; stroke: #1c1f23; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
     </style>
   </head>
   <body>
     <main>
       <a class="brand" href="/">
-        <svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="42" height="42" rx="11" fill="#3aa3ec"/><circle cx="24" cy="24" r="12.5" fill="#fff"/><path d="M18.2 24.4l4 4 7.6-8.2" fill="none" stroke="#1479c2" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="2" width="44" height="44" rx="12" fill="#1479c2"/><circle cx="24" cy="20" r="12.5" fill="#3aa3ec"/><path d="M14.4 26.5Q19 30.5 19.4 34h9.2q.4-3.5 5-7.5z" fill="#3aa3ec"/><rect x="18.6" y="33.4" width="10.8" height="3.6" rx="1.8" fill="#0b3d6b"/><rect x="19.3" y="37.8" width="9.4" height="3.4" rx="1.7" fill="#0b3d6b"/><path d="M18.4 16.6l3.2 3.2 6.6-6.7" fill="none" stroke="#fff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19.6" cy="24.2" r="1.7" fill="#1c1f23"/><circle cx="28.4" cy="24.2" r="1.7" fill="#1c1f23"/><path d="M22.2 27q1.8 1.6 3.6 0" fill="none" stroke="#1c1f23" stroke-width="1.3" stroke-linecap="round"/></svg>
         <span>Light<b>Blue</b>Prep</span>
       </a>
-      <div class="code" aria-hidden="true">404</div>
+      <!-- Bulb, "oops" mood. Same drawing as src/components/Mascot.tsx. -->
+      <div class="hero"><svg class="bulb" viewBox="0 0 120 142" width="128" height="151" aria-hidden="true"><path class="bulb-limb" d="M22 80 Q13 90 13 99 M98 80 Q107 90 107 99"/><circle class="bulb-glass" cx="60" cy="52" r="44"/><path class="bulb-glass" d="M24 76 Q40 92 41 104 H79 Q80 92 96 76 Z"/><rect class="bulb-base" x="38" y="102" width="44" height="11" rx="5.5"/><rect class="bulb-base" x="40" y="115" width="40" height="10" rx="5"/><rect class="bulb-glass" x="40" y="128" width="15" height="9" rx="4.5"/><rect class="bulb-glass" x="65" y="128" width="15" height="9" rx="4.5"/><path class="bulb-check" d="M43 43 L54 54 L77 31"/><ellipse class="bulb-cheek" cx="36" cy="80" rx="6.5" ry="4.2"/><ellipse class="bulb-cheek" cx="84" cy="80" rx="6.5" ry="4.2"/><ellipse class="bulb-ink" cx="44" cy="70" rx="4.8" ry="5.8"/><ellipse class="bulb-ink" cx="76" cy="70" rx="4.8" ry="5.8"/><circle class="bulb-shine" cx="45.6" cy="67.6" r="1.6"/><circle class="bulb-shine" cx="77.6" cy="67.6" r="1.6"/><path class="bulb-line" d="M51 82 q2.25 -3 4.5 0 t4.5 0 t4.5 0 t4.5 0"/><path class="bulb-sweat" d="M92 30 q-6 9 0 12 q6 -3 0 -12 Z"/></svg><div class="code" aria-hidden="true">404</div></div>
       <h1>This page skipped the test.</h1>
       <p>The link is broken or the page moved. Every question is still waiting for you on the home page.</p>
       <a class="go" href="/">Back to practice
