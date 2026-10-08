@@ -2295,3 +2295,4 @@ button.brand {
   .rcard-t { font-size: 26px; }
   .tablinks .tab { font-size: 10.5px; }
 }
+a.tool { text-decoration: none; color: inherit; }

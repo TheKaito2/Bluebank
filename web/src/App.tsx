@@ -11,7 +11,7 @@ import { Notes } from './components/Notes'
 import { MistakeLog } from './components/MistakeLog'
 import { Review } from './components/Review'
 import { QuestionView } from './components/QuestionView'
-import { Desmos } from './components/Desmos'
+import { Desmos, DESMOS_EMBEDDED } from './components/Desmos'
 import { Icon } from './components/Icon'
 import { Mark } from './components/Mark'
 import { SetResults } from './components/SetResults'
@@ -747,12 +747,21 @@ export default function App() {
         </div>
 
         <div className="topbar-right">
-          {section === 'MATH' ? (
+          {section === 'MATH' && DESMOS_EMBEDDED ? (
             <button className={showDesmos ? 'tool on' : 'tool'}
                     onClick={() => setShowDesmos((v) => !v)}>
               <span className="tool-glyphs"><Icon name="calculator" size={21} /></span>
               <span>Calculator</span>
             </button>
+          ) : null}
+          {section === 'MATH' && !DESMOS_EMBEDDED ? (
+            // No API key of our own yet: hand off to Desmos's free calculator
+            // site rather than embedding it.
+            <a className="tool" href="https://www.desmos.com/calculator" target="_blank" rel="noreferrer"
+               title="Opens the Desmos graphing calculator in a new tab">
+              <span className="tool-glyphs"><Icon name="calculator" size={21} /></span>
+              <span>Calculator</span>
+            </a>
           ) : null}
           <button className={showNotes ? 'tool on' : 'tool'}
                   onClick={() => setShowNotes((v) => !v)}>
@@ -831,7 +840,7 @@ export default function App() {
               persistAnnotations(annotations.filter((a) => a.id !== id))}
           />
         ) : null}
-        {showDesmos ? (
+        {showDesmos && DESMOS_EMBEDDED ? (
           <Desmos onClose={() => setShowDesmos(false)}
                   onExpandedChange={setDesmosSplit} />
         ) : null}

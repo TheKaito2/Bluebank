@@ -103,7 +103,7 @@ export function About() {
         </p>
         <p className="about-p">
           It ships React and MathJax, the Bricolage Grotesque and Noto fonts
-          (SIL Open Font License) and uses the Desmos calculator. Their licenses
+          (SIL Open Font License). The Calculator button opens Desmos's own site. Their licenses
           are in{' '}
           <a className="about-link" href="/third-party-licenses.txt" target="_blank" rel="noreferrer">
             third-party-licenses.txt</a>.

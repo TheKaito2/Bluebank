@@ -40,5 +40,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: Resources page (Khan Academy, James Lu SAT) and a 404 page.
 - 2026-10-08: Third-party license notices (web/public/third-party-licenses.txt),
   linked from About and the README; PromptPay option wired (off until QR set).
+- 2026-10-08: Removed the upstream author's Desmos API key (Desmos keys are
+  per-developer). Key now comes from VITE_DESMOS_KEY; without one the
+  Calculator button opens desmos.com/calculator in a new tab.
 
 The full history of changes is in the git log.
