@@ -1749,3 +1749,15 @@ button.box:hover, .skill:hover .box.is-off { border-color: var(--accent); }
 .q-id-copy:hover, .q-id-yt:hover { background: var(--bg-soft); }
 .q-id-copy:focus-visible, .q-id-yt:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: -2px; }
 @media (max-width: 470px) { .q-id-yt { display: none; } }
+
+/* ---- LightBluePrep brand ---- */
+.wordmark-blue { color: #1479c2; }
+.supportlink {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 13px; margin-right: 6px;
+  border: 1px solid #b9dcf6; border-radius: 999px; background: #eef7fe;
+  font-size: 13px; font-weight: 650; color: #1479c2; text-decoration: none;
+  transition: background .12s, border-color .12s;
+}
+.supportlink:hover { background: #dff0fd; border-color: #8ec8f0; }
+.supportlink:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: 2px; }
+@media (max-width: 470px) { .supportlink { display: none; } }

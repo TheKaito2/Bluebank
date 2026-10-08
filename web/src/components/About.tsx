@@ -1,92 +1,103 @@
 /**
- * About and privacy.
+ * About, privacy, credits.
  *
- * The privacy half has to keep saying three things however the wording changes:
- * what's collected, what isn't, and how to delete it. That's the part doing
- * actual work.
+ * The privacy part must stay true to what the build actually does: what is
+ * collected, what is not, how to delete it. Keep it in step with
+ * public/privacy.html.
  */
 
-import { REPO } from './Github'
+import { DONATE, REPO } from './Github'
+import { configured } from '../lib/auth'
+
+const UPSTREAM = 'https://github.com/jackwangxyw/Bluebank'
 
 export function About() {
+  const canSignIn = configured
   return (
     <div className="about">
       <section className="about-block">
-        <h1 className="about-h1">About Bluebank</h1>
+        <h1 className="about-h1">About LightBluePrep</h1>
         <p className="about-lead">
-          A free and open source practice tool for the official College Board question bank. 
+          Every official College Board practice question, free, in one place you
+          can filter, track and re-drill.
         </p>
       </section>
 
       <section className="about-block">
         <h2 className="about-h2">How it works</h2>
         <p className="about-p">
-          The questions aren't stored on a server anywhere. Your browser asks
-          College Board for them directly and keeps the ones you open, so the app
-          stays quick and works offline afterwards. The first
-          load takes a second or two, since it pulls the list of all the
-          questions before it can show you anything.
+          Pick a section, tick the topics you want, and the list shows every
+          matching question with how you did on it last time. Hide the ones you
+          have already done, or filter down to just the ones you got wrong.
         </p>
         <p className="about-p">
-          Marking happens as soon as you answer. On multiple choice you get the
-          official explanation for every choice rather than just the correct one.
+          LightBluePrep does not host the questions. Your browser downloads them
+          straight from College Board and keeps a copy, so the first visit takes
+          a few seconds and after that it is fast and works offline.
         </p>
         <p className="about-p">
-          A practice set is always in the same order. The order comes from the
-          question id itself, so question 40 is the same question every time you open the site.
-          Questions added to the bank later get slotted in cleanly.
+          Each question shows its College Board ID. Copy it, or tap YouTube to
+          look for a walkthrough of that exact question.
         </p>
       </section>
 
       <section className="about-block">
         <h2 className="about-h2">Privacy</h2>
         <p className="about-p">
-          You don't need an account to use Bluebank. If you don't sign in, Bluebank doesn't collect any of your information.
-          Google's sign-in code isn't even
-          downloaded unless you click sign in.
+          No account needed. <strong>No ads, no analytics, no tracking.</strong>{' '}
+          Your answers, notes and marks are saved in your own browser and never
+          leave it{canSignIn ? ' unless you sign in' : ''}.
         </p>
         <p className="about-p">
-          The one place your browser does reach out to is College Board, for the
-          questions themselves. They see your IP address the way any site you
-          visit does.
+          Your browser talks to College Board to fetch the questions, and to
+          Desmos only if you open the calculator. Both see your IP address, like
+          any website does.
         </p>
+        {canSignIn ? (
+          <p className="about-p">
+            Signing in with Google syncs your practice history between devices.
+            We keep only an anonymous account ID from Google, never your email,
+            name or photo, and you can delete everything on the server from the
+            sync panel.
+          </p>
+        ) : null}
         <p className="about-p">
-          Signing in only syncs
-          your answers, your highlights, notes, and which questions you
-          flagged, so you can start on a laptop and continue on your phone.
-        </p>
-        <p className="about-p">
-          That practice history is all that gets stored.{' '}
-          <strong>We don't store your email, your name or your picture.</strong>{' '}
-          Google hands us an anonymous id for your account and that's the only
-          thing your progress is attached to. 
-        </p>
-        <p className="about-p">
-          You can delete all of it from the sync panel on the Stats page, which
-          wipes everything held on the server. Your practice history on this
-          computer stays, because that is stored in the site data. You can clear that too by going to the same place you clear cookies from.
-        </p>
-        <p className="about-p">
-          If you want complete privacy, you can host the website yourself, more
-          info is on{' '}
-          <a className="about-link" href={REPO} target="_blank" rel="noreferrer">our
-          GitHub</a>.
+          To wipe your history, clear this site's data in your browser settings.
+          Full policy: <a className="about-link" href="/privacy.html">privacy.html</a>.
         </p>
       </section>
 
+      {DONATE ? (
+        <section className="about-block">
+          <h2 className="about-h2">Support</h2>
+          <p className="about-p">
+            LightBluePrep is free and stays free. Nothing is locked behind
+            payment. Donations only pay for the domain and hosting:{' '}
+            <a className="about-link" href={DONATE} target="_blank" rel="noreferrer">
+              chip in here</a>.
+          </p>
+        </section>
+      ) : null}
+
       <section className="about-block">
-        <h2 className="about-h2">License</h2>
+        <h2 className="about-h2">Credits and license</h2>
         <p className="about-p">
-          Bluebank is open source under the GNU General Public License v3. 
+          LightBluePrep is built on{' '}
+          <a className="about-link" href={UPSTREAM} target="_blank" rel="noreferrer">
+            Bluebank</a>{' '}
+          by jackwangxyw, and changes it with a new question browser, College
+          Board question IDs and more. Both are free software under the GNU
+          General Public License v3. The full source is on{' '}
+          <a className="about-link" href={REPO} target="_blank" rel="noreferrer">GitHub</a>.
         </p>
       </section>
 
       <section className="about-block">
         <h2 className="about-h2">Disclaimer</h2>
         <p className="about-p">
-          Bluebank is free and non-commercial. It isn't affiliated with or
-          endorsed by the College Board. SAT is a trademark registered by the
-          College Board.
+          LightBluePrep is a free, non-commercial student project. It is not
+          affiliated with or endorsed by College Board. SAT and Bluebook are
+          trademarks of College Board.
         </p>
       </section>
     </div>

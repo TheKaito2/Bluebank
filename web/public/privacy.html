@@ -3,39 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy Policy — Bluebank</title>
+    <title>Privacy Policy · LightBluePrep</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#324dc8" />
-    <!--
-      A static page, deliberately.
-
-      Google's OAuth consent screen needs a privacy policy at a real URL before
-      the app can be published out of Testing mode, and the app itself is a
-      single-state SPA: `view` is React state in App.tsx, there is no router and
-      no deep link, so the About page has no URL of its own to give them.
-
-      Everything here has to keep matching the Privacy section of
-      web/src/components/About.tsx. If one changes, change the other.
-
-      Self-contained, no build step, no fonts fetched. Vite copies public/
-      verbatim, so this lands at https://satbluebank.com/privacy.html.
-    -->
+    <meta name="theme-color" content="#3aa3ec" />
+    <!-- Static on purpose: Google's OAuth consent screen needs a privacy policy
+         at a real URL, and the app has no routes. Keep in step with the Privacy
+         section of web/src/components/About.tsx. -->
     <style>
       :root { color-scheme: light; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
-        background: #ffffff;
-        color: #17181a;
+        background: #ffffff; color: #17181a;
         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-        line-height: 1.6;
-        padding: 48px 24px 96px;
+        line-height: 1.6; padding: 48px 24px 96px;
       }
       main { max-width: 680px; margin: 0 auto; }
       h1 { font-size: 34px; letter-spacing: -0.02em; margin-bottom: 6px; }
       h2 { font-size: 20px; letter-spacing: -0.01em; margin: 36px 0 10px; }
       p { margin-bottom: 14px; }
       .updated { color: #63666b; font-size: 15px; margin-bottom: 8px; }
-      a { color: #324dc8; }
+      a { color: #1479c2; }
       strong { font-weight: 650; }
       .back { display: inline-block; margin-bottom: 28px; font-size: 15px; }
       ul { margin: 0 0 14px 22px; }
@@ -44,84 +31,58 @@
   </head>
   <body>
     <main>
-      <a class="back" href="/">&larr; Bluebank</a>
+      <a class="back" href="/">&larr; LightBluePrep</a>
       <h1>Privacy Policy</h1>
-      <p class="updated">Last updated 22 August 2026</p>
+      <p class="updated">Last updated 8 October 2026</p>
 
       <p>
-        Bluebank is a free, non-commercial practice tool for the official College
-        Board question bank. You do not need an account to use it.
+        LightBluePrep is a free, non-commercial SAT practice site run by a
+        student. You can use all of it without an account.
       </p>
 
-      <h2>If you do not sign in</h2>
+      <h2>What we collect</h2>
       <p>
-        Bluebank collects nothing. There is no analytics, no tracking and no
-        advertising anywhere on the site. Your practice history is stored only in
-        your own browser. Google's sign-in code is not even downloaded unless you
-        open the sync panel and click sign in.
+        <strong>Nothing.</strong> There are no ads, no analytics and no tracking
+        cookies. Your answers, notes, highlights, marks and practice sets are
+        saved only in your own browser's storage on your device.
       </p>
 
-      <h2>The one request your browser makes</h2>
-      <p>
-        The questions themselves come from College Board. Your browser asks them
-        directly, so College Board sees your IP address the way any site you visit
-        does. Bluebank has no server in the middle of that and stores no question
-        data.
-      </p>
-      <p>
-        Opening the on-screen calculator loads it from Desmos, and only then. If
-        you never open it, your browser never contacts Desmos.
-      </p>
-
-      <h2>If you do sign in</h2>
-      <p>Signing in with Google syncs your practice across your devices. What gets stored on the server is:</p>
+      <h2>Who your browser talks to</h2>
       <ul>
-        <li>which questions you answered, what you answered, and how long you took</li>
-        <li>your highlights and notes</li>
-        <li>which questions you flagged</li>
-        <li>your mistake log entries</li>
-        <li>your practice sets</li>
+        <li><strong>Cloudflare</strong> serves the website itself, and like any web host it handles your IP address to deliver the page.</li>
+        <li><strong>College Board</strong> supplies the questions. Your browser downloads them directly from College Board; we never host or store question content.</li>
+        <li><strong>Desmos</strong> supplies the calculator, and only if you open it.</li>
       </ul>
+
+      <h2>Accounts and sync</h2>
       <p>
-        <strong>
-          We do not store your email address, your name or your profile picture.
-        </strong>
-        Google gives us an anonymous account identifier, and that identifier is the
-        only thing your practice history is attached to. Nothing is ever sold,
-        shared or passed to a third party.
+        Signing in is not available yet. If it is added, this page will be
+        updated before it goes live, and signing in will stay optional.
       </p>
 
       <h2>Deleting your data</h2>
       <p>
-        The sync panel on the Stats page has a delete button that erases
-        everything held on the server for your account, permanently and
-        immediately. It does not touch the copy in your own browser, so deleting
-        your server data never costs you your practice history.
-      </p>
-      <p>
-        To clear the copy in your browser, clear this site's data the same way you
-        clear cookies.
+        Your data lives in your browser. Clearing this site's data in your
+        browser settings deletes all of it.
       </p>
 
       <h2>Children</h2>
       <p>
-        Bluebank is intended for students preparing for the SAT. It is not
-        directed at children under 13 and we do not knowingly collect data from
-        them.
+        LightBluePrep is meant for high school students preparing for the SAT.
+        It is not directed at children under 13.
       </p>
 
       <h2>Contact</h2>
       <p>
-        Questions about this policy can go to
-        <a href="mailto:jackwangxyw@gmail.com">jackwangxyw@gmail.com</a>, or to the
-        <a href="https://github.com/jackwangxyw/Bluebank" target="_blank" rel="noreferrer">GitHub repository</a>,
-        where the whole thing is open source and you can read exactly what it does.
+        Questions or problems: open an issue on the
+        <a href="https://github.com/TheKaito2/LightBluePrep/issues" target="_blank" rel="noreferrer">GitHub repository</a>,
+        where all of the site's code is public.
       </p>
 
       <h2>Disclaimer</h2>
       <p>
-        Bluebank is free and non-commercial. It is not affiliated with or endorsed
-        by the College Board. SAT is a trademark registered by the College Board.
+        LightBluePrep is not affiliated with or endorsed by College Board. SAT
+        and Bluebook are trademarks of College Board.
       </p>
     </main>
   </body>

@@ -121,7 +121,7 @@ function SignedOutPanel({ onSignedIn }: { onSignedIn: () => void }) {
       <div className="acct-gbtn" ref={slot} />
       {error ? <p className="acct-err">{error}</p> : null}
       <p className="acct-fine">
-        Bluebank works fully without an account. Nothing is uploaded unless you
+        LightBluePrep works fully without an account. Nothing is uploaded unless you
         sign in.
       </p>
     </div>

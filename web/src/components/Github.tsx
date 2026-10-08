@@ -5,7 +5,10 @@
  * filled logo and would need a fill path in a component whose whole contract
  * is `stroke`.
  */
-export const REPO = 'https://github.com/TheKaito2/Bluebank'
+export const REPO = 'https://github.com/TheKaito2/LightBluePrep'
+
+/** Donation page (Ko-fi or similar). Unset and the Support link does not render. */
+export const DONATE = (import.meta.env.VITE_DONATE_URL as string | undefined) || ''
 
 export function GithubMark({ size = 16 }: { size?: number }) {
   return (
@@ -27,6 +30,17 @@ export function GithubLink() {
     <a className="ghlink" href={REPO} target="_blank" rel="noreferrer"
        title="Source on GitHub" aria-label="Source on GitHub">
       <GithubMark size={22} />
+    </a>
+  )
+}
+
+/** "Support" link beside the GitHub icon, only when a donation page is set. */
+export function SupportLink() {
+  if (!DONATE) return null
+  return (
+    <a className="supportlink" href={DONATE} target="_blank" rel="noreferrer"
+       title="Donations pay for the domain and hosting">
+      Support
     </a>
   )
 }

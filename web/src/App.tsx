@@ -4,7 +4,7 @@ import { Home } from './components/Home'
 import { Stats as StatsPage } from './components/Stats'
 import { About } from './components/About'
 import { AccountBadge } from './components/Account'
-import { GithubLink } from './components/Github'
+import { GithubLink, SupportLink } from './components/Github'
 import { Navigator } from './components/Navigator'
 import { Notes } from './components/Notes'
 import { MistakeLog } from './components/MistakeLog'
@@ -588,7 +588,7 @@ export default function App() {
           <div className="tabs-inner">
             <span className="brand">
               <Mark />
-              <span className="wordmark">Bluebank</span>
+              <span className="wordmark">Light<span className="wordmark-blue">Blue</span>Prep</span>
             </span>
             <button className={view === 'home' ? 'tab on' : 'tab'}
                     onClick={() => setView('home')}>Practice</button>
@@ -604,6 +604,7 @@ export default function App() {
               report was that nothing indicated sync existed. The practice view
               renders its own header and deliberately does not get one.
             */}
+            <SupportLink />
             <GithubLink />
             <AccountBadge />
           </div>
@@ -782,7 +783,7 @@ export default function App() {
       </main>
 
       <footer className="bottombar">
-        <div className="bottom-left">Bluebank</div>
+        <div className="bottom-left">LightBluePrep</div>
         <div className="bottom-mid">
           <button className="navbtn" onClick={() => setShowNavigator(true)}
                   disabled={!items.length}>

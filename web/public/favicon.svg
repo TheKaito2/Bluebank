@@ -1,46 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <title>Bluebank</title>
-  <!--
-    Three cards drawn from the bank, darkest at the back, with the question on
-    the front card and the mark-for-review dot beside it. Colours are the site's
-    own, from web/src/styles.css.
-
-    The fills live in a <style> block rather than on the elements so the dark
-    variant is a colour swap and nothing else. Chrome, Firefox and Edge apply
-    prefers-color-scheme inside an SVG favicon; Safari ignores embedded styles
-    entirely and always gets the light set, which is why the light set is the
-    default rather than the override.
-
-    Why a dark set is needed at all: navy #1b2264 on Chrome's dark tab strip
-    (#202124) measures 1.12:1, which is invisible. The dark fills lift the ramp
-    just far enough that the stack still reads back-to-front, and no further.
-    The front card lands at 3.4:1 and white rules on it at 4.7:1; the back card
-    stays deliberately quiet at 1.6:1, because it is the rearmost layer and
-    lifting it enough to measure well is what made the whole mark look washed
-    out.
-
-    A custom Chrome theme with a strongly coloured tab strip cannot be detected
-    by any media query, so it is not handled here. Putting the mark on a solid
-    plate is the only thing that would, and that changes the artwork.
-  -->
-  <style>
-    .b { fill: #1b2264 }
-    .m { fill: #26399a }
-    .f { fill: #324dc8 }
-    .r { fill: #ffffff }
-    .d { fill: #eab308 }
-    @media (prefers-color-scheme: dark) {
-      .b { fill: #2a3a94 }
-      .m { fill: #3d55c4 }
-      .f { fill: #4f6ae0 }
-      /* Rules stay white in both. They sit on the front card, never on the tab,
-         so the tab colour never touches them. */
-    }
-  </style>
-  <rect class="b" x="5" y="7" width="30" height="22" rx="3"/>
-  <rect class="m" x="9" y="13" width="30" height="22" rx="3"/>
-  <rect class="f" x="13" y="19" width="30" height="22" rx="3"/>
-  <rect class="r" x="17.5" y="27" width="17" height="2.8" rx="1.4"/>
-  <rect class="r" x="17.5" y="32.5" width="13" height="2.8" rx="1.4"/>
-  <circle class="d" cx="38" cy="28.4" r="1.9"/>
+  <title>LightBluePrep</title>
+  <!-- Same mark as web/src/components/Mark.tsx. Light blue reads on both light
+       and dark tab strips, so there is no dark variant. -->
+  <rect x="3" y="3" width="42" height="42" rx="11" fill="#3aa3ec"/>
+  <circle cx="24" cy="24" r="12.5" fill="#ffffff"/>
+  <path d="M18.2 24.4l4 4 7.6-8.2" fill="none" stroke="#1479c2" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
