@@ -9,6 +9,8 @@ export const REPO = 'https://github.com/TheKaito2/LightBluePrep'
 
 /** Donation page (Ko-fi or similar). Unset and the Support link does not render. */
 export const DONATE = (import.meta.env.VITE_DONATE_URL as string | undefined) || ''
+/** Optional second donation page, shown beside the first on About. */
+export const DONATE_ALT = (import.meta.env.VITE_DONATE_ALT_URL as string | undefined) || ''
 
 export function GithubMark({ size = 16 }: { size?: number }) {
   return (

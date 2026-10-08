@@ -19,5 +19,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   YouTube button searches the bare question ID.
 - 2026-10-08: Phone layout: bottom tab bar, one-row toolbar, two-line list
   rows, filters as a bottom sheet, compact question header.
+- 2026-10-08: Support links (Ko-fi in the nav, Ko-fi and Buy Me a Coffee on
+  About); privacy page lists the donation platforms.
 
 The full history of changes is in the git log.

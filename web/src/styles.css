@@ -1848,7 +1848,12 @@ button.box:hover, .skill:hover .box.is-off { border-color: var(--accent); }
 }
 .supportlink:hover { background: #dff0fd; border-color: #8ec8f0; }
 .supportlink:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: 2px; }
-@media (max-width: 470px) { .supportlink { display: none; } }
+.tabs-inner .supportlink { margin-left: auto; }
+.tabs-inner .supportlink + .ghlink { margin-left: 0; }
+@media (max-width: 819px) {
+  .tabs-inner .supportlink { margin-left: 0; height: 30px; padding: 0 11px; font-size: 12.5px; }
+  .tabs-inner .acct { margin-left: 8px; }
+}
 
 /* Long set titles ("All questions: Algebra") ran under the timer on phones:
    grid tracks default to min-content, so the ellipsis never kicked in. */

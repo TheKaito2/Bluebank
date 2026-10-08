@@ -6,7 +6,7 @@
  * public/privacy.html.
  */
 
-import { DONATE, REPO } from './Github'
+import { DONATE, DONATE_ALT, REPO } from './Github'
 import { configured } from '../lib/auth'
 
 const UPSTREAM = 'https://github.com/jackwangxyw/Bluebank'
@@ -73,8 +73,14 @@ export function About() {
           <p className="about-p">
             LightBluePrep is free and stays free. Nothing is locked behind
             payment. Donations only pay for the domain and hosting:{' '}
-            <a className="about-link" href={DONATE} target="_blank" rel="noreferrer">
-              chip in here</a>.
+            <a className="about-link" href={DONATE} target="_blank" rel="noreferrer">Ko-fi</a>
+            {DONATE_ALT ? (
+              <>
+                {' '}or{' '}
+                <a className="about-link" href={DONATE_ALT} target="_blank" rel="noreferrer">
+                  Buy Me a Coffee</a>
+              </>
+            ) : null}.
           </p>
         </section>
       ) : null}
