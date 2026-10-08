@@ -64,6 +64,11 @@ def _taxonomy(conn, query, body):
     return {"taxonomy": session.taxonomy(conn), "stats": session.stats(conn)}
 
 
+@Api.route("GET", r"/api/history")
+def _history(conn, query, body):
+    return {"history": session.history(conn)}
+
+
 @Api.route("GET", r"/api/set")
 def _set(conn, query, body):
     rows = session.question_set(

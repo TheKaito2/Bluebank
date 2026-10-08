@@ -25,5 +25,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   form (Worker /feedback, rate limited) with an owner-only inbox.
 - 2026-10-08: Security headers (CSP, frame blocking) via web/public/_headers;
   review fixes (feedback kind, inbox cap, privacy wording, a11y roles).
+- 2026-10-08: Topic-first Home (question list removed; ID search opens a
+  question directly), streaks and an estimated-score trend (lib/progress.ts,
+  /api/history), Support popup with Ko-fi, Buy Me a Coffee and PromptPay.
 
 The full history of changes is in the git log.

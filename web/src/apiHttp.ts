@@ -6,6 +6,7 @@
  * you answer. See apiLocal.ts for the static-build counterpart, and api.ts for
  * how one is chosen.
  */
+import type { HistoryRow } from './lib/progress'
 import type {
   Annotation, Attempt, Filters, GradeResult, Mistake, MistakeTag, PracticeSet,
   Question, SetAnswer, SetItem, Stats, TaxonomyRow,
@@ -19,6 +20,10 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const data = await response.json()
   if (!response.ok) throw new Error(data?.error ?? `${response.status} ${path}`)
   return data as T
+}
+
+export function history() {
+  return call<{ history: HistoryRow[] }>('/api/history')
 }
 
 export function taxonomy() {

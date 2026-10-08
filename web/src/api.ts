@@ -48,6 +48,7 @@ export const loggedIds = impl.loggedIds
 export const saveMistake = impl.saveMistake
 export const reviewed = impl.reviewed
 export const stats = impl.stats
+export const history = impl.history
 
 // Practice sets: a frozen, randomly drawn list of questions you work through
 // and score. Both backends store them the same shape.

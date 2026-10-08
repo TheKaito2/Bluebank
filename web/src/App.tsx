@@ -4,7 +4,8 @@ import { Home } from './components/Home'
 import { Stats as StatsPage } from './components/Stats'
 import { About } from './components/About'
 import { AccountBadge } from './components/Account'
-import { GithubLink, SupportLink } from './components/Github'
+import { GithubLink } from './components/Github'
+import { SupportHost, SupportLink } from './components/Support'
 import { Navigator } from './components/Navigator'
 import { Notes } from './components/Notes'
 import { MistakeLog } from './components/MistakeLog'
@@ -20,6 +21,7 @@ import { FeedbackHost } from './components/Feedback'
 import { Inbox } from './components/Inbox'
 import { sample } from './lib/draw'
 import { arrange, type Order } from './lib/order'
+import type { HistoryRow } from './lib/progress'
 import { setSeconds, formatClock as formatCountdown } from './lib/pacing'
 import { formatClock, useQuestionTimer } from './lib/useTimer'
 import * as sync from './lib/sync'
@@ -57,6 +59,7 @@ export default function App() {
 
   const [taxonomy, setTaxonomy] = useState<TaxonomyRow[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
+  const [attemptLog, setAttemptLog] = useState<HistoryRow[]>([])
   const [filters, setFilters] = useState<Filters>({})
   const [items, setItems] = useState<SetItem[]>([])
   const [index, setIndex] = useState(0)
@@ -129,6 +132,10 @@ export default function App() {
     api.taxonomy()
       .then((d) => { if (!stale) { setTaxonomy(d.taxonomy); setStats(d.stats) } })
       .catch((e: Error) => !stale && setError(e.message))
+    // Streaks and the score estimate on Home read every attempt.
+    api.history()
+      .then((d) => { if (!stale) setAttemptLog(d.history) })
+      .catch(() => {})
     return () => { stale = true }
   }, [view, dataVersion])
 
@@ -141,6 +148,11 @@ export default function App() {
    * question, so Back and Next have nowhere to wander and the navigator says
    * 1 of 1.
    */
+  /** Questions whose College Board ID starts with `needle`, exact match first. */
+  const findIds = useCallback((needle: string) => api.questionSet({}).then((d) => d.questions
+    .filter((q) => (q.cb_id ?? '').toLowerCase().startsWith(needle))
+    .sort((a, b) => Number(b.cb_id?.toLowerCase() === needle) - Number(a.cb_id?.toLowerCase() === needle))), [])
+
   const practiceOne = useCallback((id: string) => {
     const found = items.find((i) => i.id === id)
     if (found) { setItems([found]); setIndex(0); setView('practice'); return }
@@ -634,7 +646,8 @@ export default function App() {
         </nav>
 
         {view === 'home' ? (
-          <Home taxonomy={taxonomy} stats={stats} value={filters} items={items}
+          <Home taxonomy={taxonomy} stats={stats} history={attemptLog} value={filters} items={items}
+                findIds={findIds} onOpenId={practiceOne}
                 loading={listLoading} onChange={setFilters}
                 onOpen={(i) => { setIndex(i); setView('practice') }}
                 order={order}
@@ -680,6 +693,7 @@ export default function App() {
           </div>
         )}
         <FeedbackHost />
+        <SupportHost />
       </div>
     )
   }
@@ -892,6 +906,7 @@ export default function App() {
         </>
       ) : null}
       <FeedbackHost />
+        <SupportHost />
     </div>
   )
 }

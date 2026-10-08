@@ -417,6 +417,16 @@ def stats(conn):
     }
 
 
+def history(conn):
+    """Every attempt, oldest first, with what streaks and the score need."""
+    rows = conn.execute("""
+        SELECT a.answered_at, a.correct, a.question_id, q.section, q.band,
+               q.difficulty
+        FROM attempts a JOIN questions q ON q.id = a.question_id
+        ORDER BY a.answered_at, a.id""").fetchall()
+    return [dict(r) for r in rows]
+
+
 def wrong_answers(conn, limit=50):
     """Questions most recently answered incorrectly, for review."""
     rows = conn.execute("""

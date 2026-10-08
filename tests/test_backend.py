@@ -782,6 +782,18 @@ class TestReviewOrder(unittest.TestCase):
     def test_attempts_for_is_empty_when_never_answered(self):
         self.assertEqual(session.attempts_for(self.conn, "q3"), [])
 
+    def test_history_is_every_attempt_oldest_first_with_section(self):
+        self.conn.execute(
+            "INSERT INTO attempts (id, question_id, answered_at, response,"
+            " correct, seconds) VALUES (?,?,?,?,?,?)",
+            (db.new_attempt_id(), "q1", 500, "A", 0, 9))
+        self.conn.commit()
+        rows = session.history(self.conn)
+        self.assertEqual([(r["question_id"], r["answered_at"]) for r in rows],
+                         [("q1", 500), ("q1", 1000), ("q2", 2000)])
+        for field in ("correct", "section", "band", "difficulty"):
+            self.assertIn(field, rows[0].keys(), field)
+
     def test_the_row_carries_what_review_shows(self):
         row = session.question_set(self.conn, statuses=["correct", "wrong"],
                                    order="recent")[0]

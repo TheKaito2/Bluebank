@@ -36,13 +36,3 @@ export function GithubLink() {
   )
 }
 
-/** "Support" link beside the GitHub icon, only when a donation page is set. */
-export function SupportLink() {
-  if (!DONATE) return null
-  return (
-    <a className="supportlink" href={DONATE} target="_blank" rel="noreferrer"
-       title="Donations pay for the domain and hosting">
-      Support
-    </a>
-  )
-}

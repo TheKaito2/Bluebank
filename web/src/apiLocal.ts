@@ -22,6 +22,7 @@
  *      wants it can read it. There is no server to withhold it.
  *   2. Progress here is entirely separate from the localhost SQLite database.
  */
+import type { HistoryRow } from './lib/progress'
 import { grade } from './lib/grading'
 import { normaliseQuestion, type Stub } from './lib/normalize'
 import { byShuffleKey } from './lib/shuffle'
@@ -423,6 +424,25 @@ export async function saveAnnotations(id: string, annotations: Annotation[]):
   await store.saveAnnotations(id, items)
   sync.track('annotation', id)
   return { annotations: items }
+}
+
+/** Every attempt, oldest first, with what streaks and the score need. */
+export async function history(): Promise<{ history: HistoryRow[] }> {
+  const c = await boot()
+  const out: HistoryRow[] = []
+  for (const stub of c.stubs) {
+    for (const a of c.attempts.get(stub._id) ?? []) {
+      out.push({
+        answered_at: a.answered_at,
+        correct: a.correct ? 1 : 0,
+        question_id: stub._id,
+        section: stub._section,
+        band: stub.score_band_range_cd ?? null,
+        difficulty: stub.difficulty ?? null,
+      })
+    }
+  }
+  return { history: out.sort((a, b) => a.answered_at - b.answered_at) }
 }
 
 export async function stats(): Promise<Stats> {

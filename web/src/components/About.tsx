@@ -6,7 +6,8 @@
  * public/privacy.html.
  */
 
-import { DONATE, DONATE_ALT, REPO } from './Github'
+import { REPO } from './Github'
+import { openSupport, supportAvailable } from './Support'
 import { configured } from '../lib/auth'
 import { FeedbackLink } from './Feedback'
 
@@ -69,21 +70,16 @@ export function About() {
         </p>
       </section>
 
-      {DONATE ? (
+      {supportAvailable ? (
         <section className="about-block">
           <h2 className="about-h2">Support</h2>
           <p className="about-p">
             LightBluePrep is free and stays free. Nothing is locked behind
-            payment. Donations only pay for the domain and hosting:{' '}
-            <a className="about-link" href={DONATE} target="_blank" rel="noreferrer">Ko-fi</a>
-            {DONATE_ALT ? (
-              <>
-                {' '}or{' '}
-                <a className="about-link" href={DONATE_ALT} target="_blank" rel="noreferrer">
-                  Buy Me a Coffee</a>
-              </>
-            ) : null}.
+            payment. Donations only pay for the domain and hosting.
           </p>
+          <button type="button" className="btn primary" onClick={openSupport}>
+            Support LightBluePrep
+          </button>
         </section>
       ) : null}
 
