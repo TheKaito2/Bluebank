@@ -17,6 +17,8 @@ Live: **https://lightblueprep.pages.dev**
 
 ## Credits and license
 
+Third-party components (React, MathJax, Bricolage Grotesque and Noto fonts) and their licenses are listed in [web/public/third-party-licenses.txt](web/public/third-party-licenses.txt), which the site also serves at `/third-party-licenses.txt`.
+
 LightBluePrep is a modified version of [Bluebank](https://github.com/jackwangxyw/Bluebank) by jackwangxyw, licensed under the GNU General Public License v3. LightBluePrep is distributed under the same license; see [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md) for what was changed and when.
 
 Not affiliated with or endorsed by College Board. SAT and Bluebook are trademarks of College Board. This is a free, non-commercial student project.

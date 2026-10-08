@@ -83,7 +83,7 @@ export function SupportHost() {
 
         {showQr && PROMPTPAY_QR ? (
           <figure className="sp-qr">
-            <img src={PROMPTPAY_QR} alt="PromptPay QR code for donations" width={240} height={240} />
+            <img src={PROMPTPAY_QR} alt="PromptPay QR code for donations" width={240} height={206} />
             <figcaption lang="th">สแกนด้วยแอปธนาคารไหนก็ได้ ใส่จำนวนเงินเองได้เลย ขอบคุณครับ</figcaption>
           </figure>
         ) : null}

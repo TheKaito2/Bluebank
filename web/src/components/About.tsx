@@ -97,8 +97,16 @@ export function About() {
             Bluebank</a>{' '}
           by jackwangxyw, and changes it with a new question browser, College
           Board question IDs and more. Both are free software under the GNU
-          General Public License v3. The full source is on{' '}
+          General Public License v3, so you can read, copy and change the
+          code. The full source is on{' '}
           <a className="about-link" href={REPO} target="_blank" rel="noreferrer">GitHub</a>.
+        </p>
+        <p className="about-p">
+          It ships React and MathJax, the Bricolage Grotesque and Noto fonts
+          (SIL Open Font License) and uses the Desmos calculator. Their licenses
+          are in{' '}
+          <a className="about-link" href="/third-party-licenses.txt" target="_blank" rel="noreferrer">
+            third-party-licenses.txt</a>.
         </p>
       </section>
 

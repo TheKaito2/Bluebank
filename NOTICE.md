@@ -38,5 +38,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   tabs; solid-colour page heads for Review (amber), Stats (mint) and About
   (ink); Stats, Review and About restyled with section panels and cards.
 - 2026-10-08: Resources page (Khan Academy, James Lu SAT) and a 404 page.
+- 2026-10-08: Third-party license notices (web/public/third-party-licenses.txt),
+  linked from About and the README; PromptPay option wired (off until QR set).
 
 The full history of changes is in the git log.
