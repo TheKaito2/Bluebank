@@ -45,5 +45,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   Calculator button opens desmos.com/calculator in a new tab.
 - 2026-10-08: Own Desmos API key (free Personal plan) set, embedded calculator
   back on.
+- 2026-10-08: PromptPay QR added to the Support popup (cropped to the code,
+  metadata stripped).
 
 The full history of changes is in the git log.
