@@ -38,6 +38,7 @@
 
   /* ---- streak: warm amber-orange ---- */
   --streak-50: #fff6ed;
+  --streak-100: #ffe9d4;
   --streak-200: #fdd8b4;
   --streak-500: #f2771a;
   --streak-700: #a84a07;
@@ -53,7 +54,10 @@
   --n-700: #3a3f46;
   --n-900: #1c1f23;
 
-  /* ---- type ---- */
+  /* ---- type ----
+     Display: Bricolage Grotesque (self-hosted, OFL) for headlines, numbers and
+     brand moments. Body stays Noto Sans; the practice screen stays Bluebook. */
+  --display: 'Bricolage Grotesque Variable', 'Noto Sans', system-ui, sans-serif;
   --fs-2xs: 11px;
   --fs-xs: 12px;
   --fs-sm: 13px;

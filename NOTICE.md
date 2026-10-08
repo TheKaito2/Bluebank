@@ -31,5 +31,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: Design system (web/src/tokens.css, DESIGN.md): section colours
   (Reading and Writing pink, Math light blue), icons instead of emoji,
   asymmetric progress layout, loading skeletons.
+- 2026-10-08: Bolder identity: Bricolage Grotesque display type, coloured
+  hero band, section panels (pink / light blue), filled progress tiles, dark
+  start bar with a chunky Start button.
 
 The full history of changes is in the git log.

@@ -22,7 +22,20 @@ Tokens live in [`web/src/tokens.css`](web/src/tokens.css). Components read token
 **Section scope:** add `.sec-RW` or `.sec-MATH` to a container and use `var(--sec-500)` and friends inside it. The same component then colours itself correctly for either section, with no props or conditionals.
 
 ## Type
-Noto Sans, self-hosted (no font CDN, for privacy and the CSP). The scale runs `--fs-2xs` (11) to `--fs-3xl` (32). Weights are `--fw-medium` 550, `--fw-semi` 650 and `--fw-bold` 750. Numbers use `font-variant-numeric: tabular-nums` so they don't jitter. Hierarchy comes from weight and colour before size.
+Two families, both self-hosted (no font CDN, for privacy and the CSP):
+- **Display: Bricolage Grotesque** (`var(--display)`, OFL, bundled from `@fontsource-variable/bricolage-grotesque`). Used for headlines, big numbers, section and topic names, tabs, buttons and the wordmark. Set it heavy (750–800) with tight tracking (−0.025em to −0.045em).
+- **Body: Noto Sans** (`var(--sans)`) for running text, skill names and form controls. The practice screen stays Noto/Bluebook.
+
+Hierarchy is deliberately loud:
+
+| Element | Size |
+|---|---|
+| Hero headline | 68px (42px on phone) |
+| Page or section title | 36–48px |
+| Topic card title | 21px |
+| Body | 14.5px |
+
+Numbers use `font-variant-numeric: tabular-nums` so they don't jitter.
 
 ## Space, radius, elevation, motion
 - **Space:** 4px grid, `--sp-1` (4) to `--sp-10` (40).
@@ -35,6 +48,23 @@ Noto Sans, self-hosted (no font CDN, for privacy and the CSP). The scale runs `-
 - **Stroke:** 2 in the UI, 2.2 to 3 for tiny glyphs like the checkbox tick.
 - **No emoji** anywhere in the interface.
 - **Section icons:** `book` for Reading and Writing, `sigma` for Math. Use them wherever a section is named.
+
+## Colour coverage
+Colour sits on surfaces, not just accents. Aim for about 20% of the screen:
+- **Hero band:** brand-blue gradient with pink and blue light pools.
+- **Section panels:** each section is a full tinted panel (`--sec-100` → `--sec-50`) holding white cards.
+- **Progress tiles:** the streak and coverage tiles are filled (amber and pink).
+- **Start bar:** dark ink, with a light-blue chunky button.
+
+Text on any colour still follows the shade rules above.
+
+## Buttons
+The primary call to action is chunky (Duolingo-style):
+- **Shape:** a pill in `--brand-500` with dark text.
+- **Depth:** a 4px `--brand-700` bottom edge.
+- **Pressed:** it presses down 4px.
+
+Secondary buttons are quiet pills. On the dark start bar, use translucent white.
 
 ## Patterns
 - **Cards** only where they group something you act on (topic cards, progress). Otherwise use spacing and hairlines.

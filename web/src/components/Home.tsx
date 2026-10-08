@@ -113,6 +113,14 @@ export function Home({
     return out
   }, [taxonomy, value.section])
 
+  const secStats = useMemo(() => {
+    const out = { RW: { n: 0, seen: 0, correct: 0 }, MATH: { n: 0, seen: 0, correct: 0 } }
+    for (const row of taxonomy) {
+      out[row.section].n += row.n; out[row.section].seen += row.seen; out[row.section].correct += row.correct
+    }
+    return out
+  }, [taxonomy])
+
   const totals = useMemo(() => {
     const out = { all: 0, seen: 0, live: 0, RW: 0, MATH: 0 }
     for (const row of taxonomy) {
@@ -214,40 +222,45 @@ export function Home({
 
   return (
     <div className="home">
+      <section className="hero2" aria-label="Overview">
+        <div className="hero2-in">
+          <div className="hero2-copy">
+            <span className="eyebrow">
+              {totals.all ? `${totals.all.toLocaleString()} official questions` : 'Official questions'} · always free
+            </span>
+            <h1 className="hero2-t">Pick a topic.<br /><span className="hero2-hl">Start drilling.</span></h1>
+            <p className="hero2-sub">
+              Every College Board practice question, sorted by skill. Your progress saves as you go.
+            </p>
+            <form className="qsearch" role="search"
+                  onSubmit={(e) => { e.preventDefault(); if (matches?.length === 1) onOpenId(matches[0].id) }}>
+              <Icon name="search" size={18} strokeWidth={2} />
+              <input type="search" value={query} placeholder="Find a question by ID"
+                     aria-label="Find a question by its College Board ID"
+                     autoCapitalize="off" autoCorrect="off" spellCheck={false}
+                     onChange={(e) => setQuery(e.target.value)} />
+            </form>
+            {matches && needle.length >= 3 ? (
+              <div className="idres" aria-live="polite">
+                {matches.length ? matches.slice(0, 5).map((q) => (
+                  <button key={q.id} className="idhit" onClick={() => onOpenId(q.id)}>
+                    <code className="qid">{q.cb_id}</code>
+                    <span className="idhit-s">{q.skill_name}</span>
+                    <span className={`lvl d-${q.difficulty}`}>
+                      {DIFFICULTIES.find((d) => d.key === q.difficulty)?.label}
+                    </span>
+                    <Icon name="arrow-right" size={15} />
+                  </button>
+                )) : <p className="idnone">No question with ID “{query.trim()}”.</p>}
+              </div>
+            ) : null}
+          </div>
+          <ProgressStrip history={history} covered={totals.seen} total={totals.all}
+                         accuracy={stats?.accuracy ?? null} />
+        </div>
+      </section>
+
       <div className="hwrap">
-        <header className="hhead">
-          <div>
-            <h1 className="qtitle">Practice</h1>
-            <p className="qsub">Pick the topics you want to drill, then hit Start.</p>
-          </div>
-          <form className="qsearch" role="search"
-                onSubmit={(e) => { e.preventDefault(); if (matches?.length === 1) onOpenId(matches[0].id) }}>
-            <Icon name="search" size={16} />
-            <input type="search" value={query} placeholder="Find by question ID"
-                   aria-label="Find a question by its College Board ID"
-                   autoCapitalize="off" autoCorrect="off" spellCheck={false}
-                   onChange={(e) => setQuery(e.target.value)} />
-          </form>
-        </header>
-
-        {matches && needle.length >= 3 ? (
-          <div className="idres" aria-live="polite">
-            {matches.length ? matches.slice(0, 5).map((q) => (
-              <button key={q.id} className="idhit" onClick={() => onOpenId(q.id)}>
-                <code className="qid">{q.cb_id}</code>
-                <span className="idhit-s">{q.skill_name}</span>
-                <span className={`lvl d-${q.difficulty}`}>
-                  {DIFFICULTIES.find((d) => d.key === q.difficulty)?.label}
-                </span>
-                <Icon name="arrow-right" size={15} />
-              </button>
-            )) : <p className="idnone">No question with ID “{query.trim()}”.</p>}
-          </div>
-        ) : null}
-
-        <ProgressStrip history={history} covered={totals.seen} total={totals.all}
-                       accuracy={stats?.accuracy ?? null} />
-
         {activeSets.length ? (
           <section className="qsets">
             <h2 className="side-t">Sets in progress</h2>
@@ -276,6 +289,7 @@ export function Home({
 
         <div className="topics-head">
           <h2 className="topics-t">Topics</h2>
+          <p className="topics-sub">Tap skills to build your session, or a whole area at once.</p>
           <div className="seg sectabs" role="group" aria-label="Section">
             {tabs.map((t) => (
               <button key={t.label} aria-pressed={value.section === t.key}
@@ -301,13 +315,20 @@ export function Home({
         ) : null}
 
         {domains.length ? SECTIONS.filter((s) => !value.section || s.key === value.section).map((sec) => (
-          <section key={sec.key} className={`topics sec-${sec.key}`} aria-label={sec.label}>
-            {!value.section ? (
-              <h3 className="topics-cap">
-                <Icon name={SECTION_ICON[sec.key]} size={15} strokeWidth={2.2} />
-                {sec.label}
-              </h3>
-            ) : null}
+          <section key={sec.key} className={`spanel sec-${sec.key}`} aria-label={sec.label}>
+            <header className="spanel-h">
+              <span className="spanel-ico"><Icon name={SECTION_ICON[sec.key]} size={24} strokeWidth={2} /></span>
+              <div className="spanel-txt">
+                <h3 className="spanel-t">{sec.label}</h3>
+                <p className="spanel-sub">
+                  {secStats[sec.key].n.toLocaleString()} questions · {secStats[sec.key].seen.toLocaleString()} done
+                  {secStats[sec.key].seen ? ` · ${pct(secStats[sec.key].correct, secStats[sec.key].seen)}% correct` : ''}
+                </p>
+              </div>
+              <span className="spanel-pct" aria-label="Section covered">
+                {pct(secStats[sec.key].seen, secStats[sec.key].n)}<small>%</small>
+              </span>
+            </header>
             <div className="dgrid">
               {domains.filter((d) => d.section === sec.key).map((d) => {
                 const on = d.skills.filter((s) => ticked.has(s.code)).length
