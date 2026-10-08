@@ -15,6 +15,12 @@
          /favicon.ico, got nothing, and showed the blank page glyph. The SVG
          carries its own light and dark fills; see the comment inside it. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Google Search shows a favicon beside the result; it wants a raster
+         icon in a multiple of 48px, so these sit next to the SVG. -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <!-- Link previews. Discord, Slack, iMessage and the rest fetch the page
          with a plain crawler that does not run JavaScript, so these have to sit
          in the static HTML; nothing React sets at runtime is ever seen. og:image
