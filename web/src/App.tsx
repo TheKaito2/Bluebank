@@ -19,6 +19,7 @@ import type { CellState } from './components/Navigator'
 import { SetReview } from './components/SetReview'
 import { FeedbackHost } from './components/Feedback'
 import { Inbox } from './components/Inbox'
+import { Resources } from './components/Resources'
 import { sample } from './lib/draw'
 import { arrange, type Order } from './lib/order'
 import type { HistoryRow } from './lib/progress'
@@ -54,12 +55,13 @@ const NAV = [
   { key: 'home', label: 'Practice', icon: 'grid' },
   { key: 'review', label: 'Review', icon: 'history' },
   { key: 'stats', label: 'Stats', icon: 'chart' },
+  { key: 'resources', label: 'Resources', icon: 'compass' },
   { key: 'about', label: 'About', icon: 'info' },
 ] as const
 
 export default function App() {
   const [view, setView] =
-    useState<'home' | 'stats' | 'about' | 'review' | 'practice' | 'results' | 'inbox'>('home')
+    useState<'home' | 'stats' | 'about' | 'review' | 'practice' | 'results' | 'inbox' | 'resources'>('home')
 
   /** Bumped by a sync that pulled rows; drives the taxonomy refetch below. */
   const [dataVersion, setDataVersion] = useState(0)
@@ -666,6 +668,10 @@ export default function App() {
                 onResume={openSet}
                 onAbandon={abandonSet}
                 onStart={startSet} />
+        ) : view === 'resources' ? (
+          <div className="page">
+            <Resources />
+          </div>
         ) : view === 'inbox' ? (
           <div className="page">
             <Inbox />

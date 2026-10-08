@@ -5,7 +5,7 @@
  */
 import type { ReactNode } from 'react'
 
-export type Tone = 'blue' | 'amber' | 'mint' | 'ink'
+export type Tone = 'blue' | 'amber' | 'mint' | 'ink' | 'rose'
 
 export function PageHead({ tone, eyebrow, title, sub, children }: {
   tone: Tone

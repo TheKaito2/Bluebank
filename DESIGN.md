@@ -61,7 +61,9 @@ Colour sits on surfaces, not just accents. Aim for about 20% of the screen.
 | Practice (Home) | light blue (`--brand-100`) |
 | Review | amber (`--streak-100`) |
 | Stats | mint (`--mint-100`) |
+| Resources | rose (`--rw-100`) |
 | About | dark ink (`--n-900`) |
+| 404 (`web/public/404.html`) | light blue, static |
 
 What colour sits where:
 - **Hero band:** solid `--brand-100` with a pink and a blue disc.
