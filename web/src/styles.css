@@ -918,7 +918,7 @@ body.dragging-panel, body.dragging-panel .desmos-head { cursor: grabbing; user-s
 .acct { position: relative; }
 
 .acct-badge {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
   padding: 5px 12px 5px 10px; border: 1px solid var(--line);
   border-radius: 999px; background: var(--bg);
   font: inherit; font-size: 12.5px; color: var(--muted);

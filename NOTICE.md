@@ -14,5 +14,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: Rebranded as LightBluePrep (name, logo, favicon, link preview,
   About and privacy pages); upstream sync endpoints removed from the build;
   optional donation link.
+- 2026-10-08: Own Google sign-in and sync: Worker `lightblueprep-sync` with its
+  own D1 database and OAuth client; privacy page updated for accounts;
+  YouTube button searches the bare question ID.
 
 The full history of changes is in the git log.

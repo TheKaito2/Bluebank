@@ -42,28 +42,42 @@
 
       <h2>What we collect</h2>
       <p>
-        <strong>Nothing.</strong> There are no ads, no analytics and no tracking
+        <strong>Nothing, unless you sign in.</strong> There are no ads, no analytics and no tracking
         cookies. Your answers, notes, highlights, marks and practice sets are
         saved only in your own browser's storage on your device.
       </p>
 
       <h2>Who your browser talks to</h2>
       <ul>
-        <li><strong>Cloudflare</strong> serves the website itself, and like any web host it handles your IP address to deliver the page.</li>
+        <li><strong>Cloudflare</strong> serves the website (and the sync server, if you sign in), and like any web host it handles your IP address to deliver the page.</li>
         <li><strong>College Board</strong> supplies the questions. Your browser downloads them directly from College Board; we never host or store question content.</li>
         <li><strong>Desmos</strong> supplies the calculator, and only if you open it.</li>
+        <li><strong>Google</strong> handles sign-in, and only if you click sign in.</li>
       </ul>
 
-      <h2>Accounts and sync</h2>
+      <h2>If you sign in</h2>
       <p>
-        Signing in is not available yet. If it is added, this page will be
-        updated before it goes live, and signing in will stay optional.
+        Signing in is optional. It uses Google sign-in so your progress follows
+        you between devices. When you sign in, our server (a Cloudflare Worker
+        and database) stores:
+      </p>
+      <ul>
+        <li>the questions you answered, your answers and how long they took</li>
+        <li>your highlights, notes, marks and mistake log</li>
+        <li>your practice sets</li>
+      </ul>
+      <p>
+        <strong>We never store your email, name or profile picture.</strong>
+        Google gives us an anonymous account ID, and that ID is the only thing
+        your practice history is linked to. Nothing is sold or shared.
       </p>
 
       <h2>Deleting your data</h2>
       <p>
-        Your data lives in your browser. Clearing this site's data in your
-        browser settings deletes all of it.
+        If you signed in, the sync panel on the Stats page has a button that
+        permanently deletes everything stored on the server for your account.
+        Your browser's own copy is separate: clear this site's data in your
+        browser settings to delete it.
       </p>
 
       <h2>Children</h2>
