@@ -590,6 +590,7 @@ export default function App() {
               <Mark />
               <span className="wordmark">Light<span className="wordmark-blue">Blue</span>Prep</span>
             </span>
+            <div className="tablinks">
             <button className={view === 'home' ? 'tab on' : 'tab'}
                     onClick={() => setView('home')}>Practice</button>
             <button className={view === 'review' ? 'tab on' : 'tab'}
@@ -598,6 +599,7 @@ export default function App() {
                     onClick={() => setView('stats')}>Stats</button>
             <button className={view === 'about' ? 'tab on' : 'tab'}
                     onClick={() => setView('about')}>About</button>
+            </div>
             {/*
               In the nav rather than in a page corner, so Home, Stats and About
               all show it from one instance. It was on Stats only, and the user's

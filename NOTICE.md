@@ -17,5 +17,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: Own Google sign-in and sync: Worker `lightblueprep-sync` with its
   own D1 database and OAuth client; privacy page updated for accounts;
   YouTube button searches the bare question ID.
+- 2026-10-08: Phone layout: bottom tab bar, one-row toolbar, two-line list
+  rows, filters as a bottom sheet, compact question header.
 
 The full history of changes is in the git log.

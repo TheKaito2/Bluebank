@@ -1703,32 +1703,113 @@ button.box:hover, .skill:hover .box.is-off { border-color: var(--accent); }
 
 .qempty { padding: 60px 0; text-align: center; color: var(--muted); font-size: 14.5px; }
 
+/* Phone-only and desktop-only bits of the home page. */
+.phone-only, .order-sel, .sheet-head, .sheet-foot, .sheet-scrim { display: none; }
+
 @media (max-width: 819px) {
   .home-grid { grid-template-columns: 1fr; }
+  .desk-only, .qbar .seg.sm { display: none; }
+  .phone-only { display: block; }
+  .order-sel { display: inline-block; }
+  .pace-chips { margin-top: 8px; }
+
+  /* Filters: a sheet that slides up over the list, with a button that says
+     how many questions the choices leave. */
   .side {
-    display: none; position: static; max-height: none; border-right: 0;
-    border-bottom: 1px solid var(--line); padding: 18px 16px 24px; order: 1;
+    display: none; position: fixed; z-index: 60; left: 0; right: 0; bottom: 0;
+    top: auto; max-height: 86vh; overflow-y: auto; overscroll-behavior: contain;
+    border: 0; border-radius: 18px 18px 0 0; background: var(--bg);
+    padding: 0 18px 0; box-shadow: 0 -10px 40px rgba(16, 20, 30, .18);
   }
-  .side.open { display: block; }
+  .side.open { display: block; animation: sheet-up .22s ease-out; }
+  .sheet-scrim {
+    display: block; position: fixed; inset: 0; z-index: 59; background: rgba(16, 20, 30, .38);
+    animation: fade-in .2s ease-out;
+  }
+  .sheet-head {
+    display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 1;
+    margin: 0 -18px 14px; padding: 16px 18px 12px; background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet-t { flex: 1; font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+  .sheet-x {
+    display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center;
+    border: 0; border-radius: 50%; background: var(--bg-soft); color: var(--ink-2); cursor: pointer;
+  }
+  .sheet-foot {
+    display: block; position: sticky; bottom: 0; margin: 22px -18px 0;
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .sheet-go { width: 100%; justify-content: center; padding: 13px 18px; font-size: 15px; }
   .side .seg { flex-direction: row; }
   .side .seg-b { flex-direction: column; gap: 1px; padding: 7px 4px; font-size: 12.5px; }
-  .qmain { display: contents; }
+  .side-block { margin-top: 22px; }
+  /* Bigger touch targets in the topic tree. */
+  .tree-name { padding: 9px 0; }
+  .skill { padding: 9px 6px; }
+
+  .qmain { padding: 0 0 24px; }
   .qmain > * { padding-left: 16px; padding-right: 16px; }
-  .qsets { order: 0; margin-top: 18px; }
-  .qhead { order: 0; padding-top: 20px; align-items: center; }
-  .qtitle { font-size: 24px; }
-  .filters-btn { display: inline-flex; flex: none; }
-  .qbar { order: 2; margin: 14px 0 0; padding: 10px 16px; gap: 10px; }
-  .qbar-go { width: 100%; margin-left: 0; }
-  .qbar-go .btn { margin-left: auto; }
-  .qlist { order: 3; padding: 0; }
-  .qempty { order: 3; }
-  .qrow { grid-template-columns: 34px minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 2px 10px; padding: 10px 16px; }
-  .qrow > :nth-child(3) { grid-column: 3; grid-row: 1; justify-self: end; }
-  .qrow .qstat { grid-column: 2; grid-row: 2; font-size: 12px; }
-  .qrow .qrow-when { grid-column: 3; grid-row: 2; }
-  .qrow-n { grid-row: 1 / span 2; }
-  .qrow-head { display: none; }
+  .qsets { margin-top: 16px; }
+  .qhead { padding-top: 16px; align-items: center; }
+  .qtitle { font-size: 22px; }
+  .qsub { margin-top: 4px; font-size: 13px; }
+  .filters-btn { display: inline-flex; flex: none; padding: 8px 14px; }
+
+  /* One row: hide done, order, start. */
+  .qbar { margin: 12px 0 0; padding: 9px 16px; gap: 10px; flex-wrap: nowrap; }
+  .qbar .toggle { font-size: 13px; gap: 7px; flex: none; }
+  .qbar .sel { height: 34px; font-size: 13px; padding-right: 28px; }
+  .qbar-go { margin-left: auto; flex: none; }
+  .qbar-go .btn { padding: 8px 14px; font-size: 14px; }
+
+  /* Rows: two lines. Skill and level, then status, domain + ID, and when. */
+  .qlist { padding: 0; margin-top: 0; }
+  .qrow-head, .qrow-n { display: none; }
+  .qrow {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "s s lvl" "st d when";
+    gap: 3px 8px; padding: 11px 16px;
+    contain-intrinsic-size: auto 60px;
+  }
+  .qrow-skill { display: contents; }
+  .qrow-s { grid-area: s; font-size: 14.5px; }
+  .qrow-d { grid-area: d; font-size: 12px; align-self: center; }
+  .qrow > :nth-child(3) { grid-area: lvl; justify-self: end; align-self: start; }
+  .qrow .qstat { grid-area: st; font-size: 12px; gap: 5px; }
+  .qrow .qstat::after { content: '·'; color: var(--line-2); margin-left: 3px; }
+  .qrow .qdot { width: 8px; height: 8px; }
+  .qrow .qrow-when { grid-area: when; font-size: 11.5px; align-self: center; }
+  .lvl { font-size: 11px; padding: 1px 8px; }
+  .qempty { padding: 40px 16px; }
+}
+
+@keyframes sheet-up { from { transform: translateY(40px); opacity: .4; } to { transform: none; opacity: 1; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .side.open, .sheet-scrim { animation: none; }
+}
+
+/* ---- phone: tabs move to a bottom bar, the top row keeps brand + sync ---- */
+.tablinks { display: contents; }
+@media (max-width: 819px) {
+  .shell { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+  .tabs-inner { padding: 0 16px; justify-content: flex-start; }
+  .brand { margin-right: auto; }
+  .wordmark { font-size: 16px; }
+  .tablinks {
+    display: flex; position: fixed; z-index: 50; left: 0; right: 0; bottom: 0;
+    height: calc(58px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(255, 255, 255, .96); backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+  }
+  .tablinks .tab {
+    flex: 1; height: 100%; padding: 0; font-size: 13px; font-weight: 600; color: var(--muted);
+  }
+  .tablinks .tab.on { color: var(--accent); }
+  .tablinks .tab.on::after { top: 0; bottom: auto; left: 28%; right: 28%; height: 3px; border-radius: 0 0 3px 3px; background: var(--accent); }
 }
 
 /* ---- College Board question id: list rows and the question header ---- */
@@ -1748,7 +1829,14 @@ button.box:hover, .skill:hover .box.is-off { border-color: var(--accent); }
 .q-id-yt { border-left: 1px solid var(--line); color: var(--red); font-weight: 600; }
 .q-id-copy:hover, .q-id-yt:hover { background: var(--bg-soft); }
 .q-id-copy:focus-visible, .q-id-yt:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: -2px; }
-@media (max-width: 470px) { .q-id-yt { display: none; } }
+@media (max-width: 470px) {
+  /* The ribbon alone says "mark"; the words pushed the ID off the row. */
+  .markbtn span { display: none; }
+  .q-head { gap: 8px; }
+  .q-id { margin-right: 4px; }
+  .q-id-copy { font-size: 11px; padding: 3px 7px; min-width: 9ch; }
+  .q-id-yt { font-size: 11px; padding: 3px 8px; }
+}
 
 /* ---- LightBluePrep brand ---- */
 .wordmark-blue { color: #1479c2; }
@@ -1761,3 +1849,10 @@ button.box:hover, .skill:hover .box.is-off { border-color: var(--accent); }
 .supportlink:hover { background: #dff0fd; border-color: #8ec8f0; }
 .supportlink:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: 2px; }
 @media (max-width: 470px) { .supportlink { display: none; } }
+
+/* Long set titles ("All questions: Algebra") ran under the timer on phones:
+   grid tracks default to min-content, so the ellipsis never kicked in. */
+@media (max-width: 819px) {
+  .topbar { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  .topbar-left, .section-title { min-width: 0; max-width: 100%; }
+}

@@ -201,7 +201,21 @@ export function Home({
   return (
     <div className="home">
       <div className="home-grid">
+        {showFilters ? (
+          <div className="sheet-scrim" onClick={() => setShowFilters(false)} />
+        ) : null}
         <aside className={showFilters ? 'side open' : 'side'} aria-label="Filters">
+          <div className="sheet-head">
+            <span className="sheet-t">Filters</span>
+            {activeFilters ? (
+              <button className="link" onClick={() => onChange({ section: value.section })}>
+                Reset
+              </button>
+            ) : null}
+            <button className="sheet-x" onClick={() => setShowFilters(false)} aria-label="Close filters">
+              <Icon name="close" size={18} />
+            </button>
+          </div>
           <div className="seg" role="tablist" aria-label="Section">
             {tabs.map((t) => (
               <button key={t.label} role="tab"
@@ -326,6 +340,36 @@ export function Home({
               Skip questions from official practice tests
             </label>
           ) : null}
+
+          <div className="side-block phone-only">
+            <h2 className="side-t">Practice mode</h2>
+            <div className="chips">
+              {SIZES.map((n) => (
+                <button key={n}
+                        className={(value.size ?? 0) === n ? 'chip on' : 'chip'}
+                        aria-pressed={(value.size ?? 0) === n}
+                        onClick={() => set({ size: n || undefined })}>
+                  {n ? `Set of ${n}` : 'Open'}
+                </button>
+              ))}
+            </div>
+            {value.size ? (
+              <div className="chips pace-chips">
+                <button className={!value.speed ? 'chip on' : 'chip'}
+                        onClick={() => set({ speed: undefined })}>Untimed</button>
+                {SPEEDS.map((x) => (
+                  <button key={x} className={value.speed === x ? 'chip on' : 'chip'}
+                          onClick={() => set({ speed: x })}>{x}x</button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="sheet-foot">
+            <button className="btn primary sheet-go" onClick={() => setShowFilters(false)}>
+              {loading ? 'Counting…' : `Show ${count.toLocaleString()} question${count === 1 ? '' : 's'}`}
+            </button>
+          </div>
         </aside>
 
         <main className="qmain">
@@ -388,6 +432,11 @@ export function Home({
               Hide done
             </button>
 
+            <select className="sel order-sel" aria-label="Order" value={order}
+                    onChange={(e) => onOrder(e.target.value as Order)}>
+              {ORDERS.map((o) => <option key={o.key} value={o.key}>{o.label}</option>)}
+            </select>
+
             <div className="seg sm" role="radiogroup" aria-label="Order">
               {ORDERS.map((o) => (
                 <button key={o.key} role="radio" aria-checked={order === o.key}
@@ -400,14 +449,14 @@ export function Home({
             </div>
 
             <div className="qbar-go">
-              <select className="sel" aria-label="Set size" value={value.size ?? 0}
+              <select className="sel desk-only" aria-label="Set size" value={value.size ?? 0}
                       onChange={(e) => set({ size: Number(e.target.value) || undefined })}>
                 {SIZES.map((n) => (
                   <option key={n} value={n}>{n ? `Set of ${n}` : 'Open practice'}</option>
                 ))}
               </select>
               {value.size ? (
-                <select className="sel" aria-label="Pace" value={value.speed ?? 0}
+                <select className="sel desk-only" aria-label="Pace" value={value.speed ?? 0}
                         onChange={(e) => set({ speed: Number(e.target.value) || undefined })}>
                   <option value={0}>Untimed</option>
                   {SPEEDS.map((x) => <option key={x} value={x}>{x}x time</option>)}
