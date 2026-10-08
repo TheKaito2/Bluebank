@@ -1,0 +1,15 @@
+// LightBluePrep sync Worker. Deploy: `cd worker && npx wrangler deploy`.
+// Secrets (not in this file): `npx wrangler secret put GOOGLE_CLIENT_ID`.
+{
+  "name": "lightblueprep-sync",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lightblueprep",
+      "database_id": "b1dd4f11-0f27-4796-834a-5d03d03bfffd"
+    }
+  ]
+}

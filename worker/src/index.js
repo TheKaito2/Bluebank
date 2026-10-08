@@ -1,5 +1,5 @@
 /**
- * Bluebank cloud sync.
+ * LightBluePrep cloud sync (from Bluebank).
  *
  * PLAIN JAVASCRIPT, ONE FILE, ON PURPOSE. Setup is done through the Cloudflare
  * dashboard rather than wrangler, and the dashboard's Edit Code editor runs
@@ -59,11 +59,10 @@
  * migration.
  */
 const ALLOWED_ORIGINS = [
-  'https://satbluebank.com',
-  'https://www.satbluebank.com',
-  'https://jackwangxyw.github.io',
+  'https://lightblueprep.pages.dev',
   'http://localhost:5173',
   'http://localhost:8000',
+  'http://localhost:8010',
 ]
 
 const SESSION_DAYS = 90

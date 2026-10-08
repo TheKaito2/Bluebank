@@ -313,7 +313,7 @@ export function QuestionView(props: Props) {
 
 function QuestionId({ id }: { id: string }) {
   const [copied, setCopied] = useState(false)
-  const search = `https://www.youtube.com/results?search_query=${encodeURIComponent(`SAT question ${id}`)}`
+  const search = `https://www.youtube.com/results?search_query=${encodeURIComponent(id)}`
   return (
     <span className="q-id">
       <button className="q-id-copy" title="Copy question ID"
