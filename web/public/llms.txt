@@ -1,0 +1,26 @@
+# LightBluePrep
+
+> LightBluePrep is a free, open-source practice site for the Digital SAT. It has every official College Board SAT practice question from the public question bank (3,767 questions), sorted by section, domain, skill and difficulty. No paywall, no ads, no account needed.
+
+What it does:
+
+- Filter questions by topic and difficulty, hide ones already done, re-drill ones you got wrong
+- Shuffled or ordered practice, and timed practice sets that grade at the end like Bluebook
+- Remembers your progress in the browser; optional Google sign-in syncs it across devices
+- Look up any question by its College Board question ID, with a YouTube search for walkthroughs
+- Mistake log (silly / process / knowledge), Review page to redo whole categories at once
+- Embedded Desmos graphing calculator and a math reference sheet, like the real test
+- Estimated score per section, streaks, and per-skill accuracy stats
+
+Who it is for: high school students preparing for the Digital SAT who want the official question bank in one place for free.
+
+## Links
+
+- [Practice site](https://lightblueprep.pages.dev/): start here
+- [Source code (GPL-3.0)](https://github.com/TheKaito2/LightBluePrep): built on Bluebank by jackwangxyw
+- [Privacy policy](https://lightblueprep.pages.dev/privacy): no tracking, no ads; sign-in stores only an anonymous ID
+
+## Notes
+
+- Not affiliated with or endorsed by College Board. SAT and Bluebook are trademarks of College Board.
+- Questions are fetched from College Board's public question bank; the site does not host question content.
