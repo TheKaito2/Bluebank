@@ -73,12 +73,14 @@ const FILTERS: [Filter, string][] = [
 
 interface Props {
   onPractice: (id: string) => void
+  /** Practise a whole category in one go, in the order given. */
+  onPracticeMany: (ids: string[], title: string) => void
   /** Open a finished set's score screen. */
   onOpenSet: (id: string) => void
   onDeleteSet: (id: string) => void
 }
 
-export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
+export function Review({ onPractice, onPracticeMany, onOpenSet, onDeleteSet }: Props) {
   const [sets, setSets] = useState<PracticeSet[] | null>(null)
   const [items, setItems] = useState<SetItem[] | null>(null)
   /** Questions with a mistake log, and their tags. Loaded up front. */
@@ -188,11 +190,20 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
 
   // Unanswered rows are only there for Marked; everywhere else they'd be noise.
   const answered = items.filter((i) => i.answered_at !== null)
-  const shown = filter === 'marked' ? items.filter((i) => i.flagged === 1)
-    : answered.filter((i) => (
-      filter === 'incorrect' ? i.last_correct !== 1
-        : filter === 'logged' ? logged.has(i.id) && (!tag || logged.get(i.id)!.includes(tag))
-          : true))
+  /** One definition per category, shared by the filter list and the Redo tiles. */
+  const pick = (f: Filter, t: MistakeTag | null): SetItem[] => (
+    f === 'marked' ? items.filter((i) => i.flagged === 1)
+      : answered.filter((i) => (
+        f === 'incorrect' ? i.last_correct !== 1
+          : f === 'logged' ? logged.has(i.id) && (!t || logged.get(i.id)!.includes(t))
+            : true)))
+  const shown = pick(filter, tag)
+
+  const redo: { key: string; label: string; rows: SetItem[]; tag?: boolean }[] = [
+    ...FILTERS.map(([f, label]) => ({ key: f, label, rows: pick(f, null) })),
+    ...MISTAKE_TAGS.map((t) => ({ key: t, label: TAG_LABEL[t], rows: pick('logged', t), tag: true }))
+      .filter((r) => r.rows.length),
+  ]
 
   // Section, then day, then easy to hard. The list arrives newest first, so the
   // days keep that order simply by being met in turn.
@@ -230,6 +241,21 @@ export function Review({ onPractice, onOpenSet, onDeleteSet }: Props) {
       </div>,
     )}
     <div className="review">
+      <section className="redo" aria-labelledby="redo-h">
+        <h2 id="redo-h" className="redo-h">Redo a whole pile</h2>
+        <div className="redo-grid">
+          {redo.map((r) => (
+            <button key={r.key} className={r.tag ? 'redo-tile is-tag' : 'redo-tile'}
+                    disabled={!r.rows.length}
+                    onClick={() => onPracticeMany(r.rows.map((i) => i.id), `Review: ${r.label}`)}>
+              <span className="redo-n">{r.rows.length}</span>
+              <span className="redo-l">{r.label}</span>
+              <Icon name="arrow-right" size={18} strokeWidth={2.4} />
+            </button>
+          ))}
+        </div>
+      </section>
+
       {setHistory}
 
       <div className="seg review-filter" role="group" aria-label="Show">

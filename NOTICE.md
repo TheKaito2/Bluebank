@@ -55,5 +55,8 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-08: New logo (Bulb's face) and mascot Bulb in four moods, drawn
   as SVG from concept art made with OpenAI image generation; new link
   preview card (source in web/og/).
+- 2026-10-10: Review: "Redo a whole pile" tiles at the top practise every
+  question in a category (All, Incorrect, Marked, Has a note, each mistake
+  type) in one go.
 
 The full history of changes is in the git log.

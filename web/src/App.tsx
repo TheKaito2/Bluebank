@@ -164,6 +164,19 @@ export default function App() {
     .filter((q) => (q.cb_id ?? '').toLowerCase().startsWith(needle))
     .sort((a, b) => Number(b.cb_id?.toLowerCase() === needle) - Number(a.cb_id?.toLowerCase() === needle))), [])
 
+  /** Title for a list opened from Review ("Review: Incorrect"). */
+  const [listTitle, setListTitle] = useState<string | null>(null)
+  useEffect(() => { if (view !== 'practice') setListTitle(null) }, [view])
+
+  const practiceMany = useCallback((ids: string[], title: string) => {
+    api.questionSet({}).then((d) => {
+      const byId = new Map(d.questions.map((q) => [q.id, q]))
+      const list = ids.flatMap((id) => byId.get(id) ?? [])
+      if (!list.length) return
+      setItems(list); setIndex(0); setListTitle(title); setView('practice')
+    }).catch((e: Error) => setError(e.message))
+  }, [])
+
   const practiceOne = useCallback((id: string) => {
     const found = items.find((i) => i.id === id)
     if (found) { setItems([found]); setIndex(0); setView('practice'); return }
@@ -610,6 +623,7 @@ export default function App() {
     // A set describes itself from the filters it was BUILT with. Reading the
     // live filter state instead made a resumed set announce whatever the home
     // page happened to be showing.
+    if (listTitle && !activeSet) return listTitle
     const f = activeSet?.filters ?? filters
     const lead = f.section ? SECTION_LABEL[f.section] : 'All questions'
     if (f.skills?.length === 1 && question?.skill_name) {
@@ -619,7 +633,7 @@ export default function App() {
       return `${lead}: ${question.domain_name}`
     }
     return lead
-  }, [activeSet?.filters, filters, question?.domain_name, question?.skill_name])
+  }, [activeSet, listTitle, filters, question?.domain_name, question?.skill_name])
 
   if (!practising) {
     return (
@@ -693,7 +707,7 @@ export default function App() {
           </div>
         ) : view === 'review' ? (
           <div className="page">
-            <Review onPractice={practiceOne} onOpenSet={showSet}
+            <Review onPractice={practiceOne} onPracticeMany={practiceMany} onOpenSet={showSet}
                     onDeleteSet={dropSet} />
           </div>
         ) : (

@@ -2371,3 +2371,27 @@ a.tool { text-decoration: none; color: inherit; }
 @media (max-width: 819px) {
   .hero2-bulb { width: 72px; height: auto; top: 50px; right: 4px; }
 }
+
+/* ---- Review: Redo a whole pile ---- */
+.redo { margin-top: var(--sp-6); }
+.redo-h { margin: 0 0 var(--sp-3); font-family: var(--display); font-size: var(--fs-xl); font-weight: 750; letter-spacing: -.02em; color: var(--n-900); }
+.redo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--sp-3); }
+.redo-tile {
+  display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; align-items: end;
+  padding: 14px 16px; border: 1px solid var(--n-200); border-radius: var(--rad-lg);
+  background: var(--n-0); color: var(--n-900); text-align: left; cursor: pointer;
+  box-shadow: var(--sh-1); transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+.redo-tile svg { grid-column: 2; grid-row: 1 / 3; align-self: center; color: var(--brand-700); }
+.redo-n { font-family: var(--display); font-weight: 800; font-size: 32px; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.redo-l { margin-top: 4px; font-size: var(--fs-sm); font-weight: 650; color: var(--n-700); }
+.redo-tile:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--sh-2); }
+.redo-tile:active:not(:disabled) { transform: translateY(1px); }
+.redo-tile:focus-visible { outline: 3px solid var(--brand-300); outline-offset: 2px; }
+.redo-tile:disabled { cursor: default; opacity: .45; box-shadow: none; }
+.redo-tile.is-tag { background: var(--rw-50); border-color: var(--rw-200); }
+.redo-tile.is-tag .redo-n { color: var(--rw-700); }
+.redo-tile.is-tag svg { color: var(--rw-700); }
+@media (max-width: 640px) {
+  .redo-grid { grid-template-columns: 1fr 1fr; }
+}
