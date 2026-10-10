@@ -16,6 +16,7 @@ interface Props {
   set: PracticeSet
   /** Put one of its questions back on screen to answer again. */
   onPractice: (id: string) => void
+  onPracticeMany?: (ids: string[], title: string) => void
   onRedo: (set: PracticeSet) => void
   onDelete: (id: string) => void
   onDone: () => void
@@ -27,7 +28,7 @@ function verdict(pct: number): string {
   return 'poor'
 }
 
-export function SetResults({ set, onPractice, onRedo, onDelete, onDone }: Props) {
+export function SetResults({ set, onPractice, onPracticeMany, onRedo, onDelete, onDone }: Props) {
   const [confirming, setConfirming] = useState(false)
   const [meta, setMeta] = useState<Map<string, SetItem>>(new Map())
   /**
@@ -137,6 +138,7 @@ export function SetResults({ set, onPractice, onRedo, onDelete, onDone }: Props)
                                 response={item.response}
                                 seconds={item.seconds}
                                 onPractice={onPractice}
+                                onPracticeMany={onPracticeMany}
                                 editable />
               ) : null}
             </li>

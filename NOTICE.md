@@ -58,5 +58,10 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
 - 2026-10-10: Review: "Redo a whole pile" tiles at the top practise every
   question in a category (All, Incorrect, Marked, Has a note, each mistake
   type) in one go.
+- 2026-10-10: Every question gets a solving-process type (179 types across
+  the 29 skills, written by AI from the question bank; web/public/
+  process-types.json holds only ids and our type names). Review shows the type
+  on each row, "Practice N similar" under each question, and a Redo button per
+  section. Build script: scripts/process_types.py.
 
 The full history of changes is in the git log.

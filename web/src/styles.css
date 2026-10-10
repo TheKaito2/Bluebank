@@ -2395,3 +2395,26 @@ a.tool { text-decoration: none; color: inherit; }
 @media (max-width: 640px) {
   .redo-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---- Review: redo a whole section, practise similar ---- */
+.spanel-redo {
+  flex: none; margin-left: auto; align-self: center; display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px; border: 0; border-radius: var(--rad-pill); cursor: pointer;
+  background: var(--sec-600); color: #fff; font-family: var(--display); font-weight: 750; font-size: var(--fs-md);
+}
+.spanel-redo:hover { background: var(--sec-700); }
+.spanel-redo:focus-visible { outline: 3px solid var(--sec-300); outline-offset: 2px; }
+.similar {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; align-items: center;
+  margin: var(--sp-5) 0 var(--sp-3); padding: 14px 16px;
+  border: 1px solid var(--n-200); border-left: 4px solid var(--sec-500, var(--brand-500));
+  border-radius: var(--rad-md); background: var(--n-0);
+}
+.similar-k { grid-column: 1; font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--n-500); }
+.similar-t { grid-column: 1; font-family: var(--display); font-weight: 750; font-size: var(--fs-lg); color: var(--n-900); }
+.similar-how { grid-column: 1; font-size: var(--fs-sm); color: var(--n-700); }
+.similar-go { grid-column: 2; grid-row: 1 / 4; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+@media (max-width: 640px) {
+  .similar { grid-template-columns: 1fr; }
+  .similar-go { grid-column: 1; grid-row: auto; margin-top: 10px; justify-self: start; }
+}

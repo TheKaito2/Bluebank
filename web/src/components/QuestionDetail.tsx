@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react'
 import * as api from '../api'
 import { Explanation } from './Explanation'
 import { MistakeFields, TAG_LABEL } from './MistakeFields'
+import { loadProcessTypes, similarTo, typeOf, type ProcessType } from '../lib/similar'
 import { RichText } from './RichText'
 import { Icon } from './Icon'
 import { duration } from '../lib/pacing'
@@ -42,10 +43,12 @@ interface Props {
    * you got it right, and so the first place logging one means anything.
    */
   editable?: boolean
+  /** Practise questions solved the same way. Absent hides the block. */
+  onPracticeMany?: (ids: string[], title: string) => void
 }
 
 export function QuestionDetail({
-  id, response, seconds, onPractice, onLogged, editable,
+  id, response, seconds, onPractice, onLogged, editable, onPracticeMany,
 }: Props) {
   const [data, setData] = useState<{
     question: Question; annotations: Annotation[]; mistake: Mistake | null
@@ -64,6 +67,7 @@ export function QuestionDetail({
   // Kept apart from `error`, which replaces the whole panel. A save that fails
   // should say so without throwing away the question you were reading.
   const [logError, setLogError] = useState<string | null>(null)
+  const [similar, setSimilar] = useState<{ type: ProcessType | null; ids: string[] } | null>(null)
 
   useEffect(() => {
     let stale = false
@@ -80,6 +84,18 @@ export function QuestionDetail({
       .catch((e: Error) => !stale && setError(e.message))
     return () => { stale = true }
   }, [id, response, onLogged])
+
+  // Once the question is in, find the others of its process type.
+  const q = data?.question
+  useEffect(() => {
+    if (!q || !onPracticeMany) return
+    let stale = false
+    Promise.all([loadProcessTypes(), api.questionSet({})]).then(([pt, pool]) => {
+      if (stale || !pt) return
+      setSimilar({ type: typeOf(q.cb_id, pt), ids: similarTo(q, pool.questions, pt).map((s) => s.id) })
+    }).catch(() => { /* the block just stays hidden */ })
+    return () => { stale = true }
+  }, [q, onPracticeMany])
 
   if (error) return <p className="review-empty">{error}</p>
   if (!data || !result) return <p className="review-empty">Loading…</p>
@@ -230,6 +246,20 @@ export function QuestionDetail({
 
       <Explanation result={result} question={data.question}
                    seconds={seconds} startOpen unanswered={!attempts.length} />
+
+      {similar && similar.ids.length > 0 && onPracticeMany ? (
+        <div className="similar">
+          <span className="similar-k">Same type</span>
+          <span className="similar-t">{similar.type?.label ?? data.question.skill_name}</span>
+          {similar.type ? <span className="similar-how">{similar.type.how}</span> : null}
+          <button className="btn primary similar-go"
+                  onClick={() => onPracticeMany(similar.ids,
+                    `Similar: ${similar.type?.label ?? data.question.skill_name}`)}>
+            Practice {similar.ids.length} similar
+            <Icon name="arrow-right" size={15} strokeWidth={2.4} />
+          </button>
+        </div>
+      ) : null}
 
       <button className="btn small review-again" onClick={() => onPractice(id)}>
         Practice this question again

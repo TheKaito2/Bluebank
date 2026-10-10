@@ -700,6 +700,7 @@ export default function App() {
             {shownSet ? (
               <SetResults set={shownSet}
                           onPractice={practiceOne}
+                          onPracticeMany={practiceMany}
                           onRedo={redoSet}
                           onDelete={dropSet}
                           onDone={() => { setShownSet(null); setView('review') }} />

@@ -23,6 +23,7 @@ import { PageHead } from './PageHead'
 import { Mascot } from './Mascot'
 import { TAG_LABEL } from './MistakeFields'
 import { describeSet } from '../lib/setlabel'
+import { loadProcessTypes, typeOf, type ProcessTypes } from '../lib/similar'
 import { duration, formatClock } from '../lib/pacing'
 import { MISTAKE_TAGS, type MistakeTag, type PracticeSet, type Section, type SetItem } from '../types'
 
@@ -90,6 +91,9 @@ export function Review({ onPractice, onPracticeMany, onOpenSet, onDeleteSet }: P
   const [tag, setTag] = useState<MistakeTag | null>(null)
   const [open, setOpen] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  /** Process types, for the type name on each row. Optional: rows work without. */
+  const [pt, setPt] = useState<ProcessTypes | null>(null)
+  useEffect(() => { void loadProcessTypes().then(setPt) }, [])
 
   /**
    * Stable identity, and it returns the previous Map unchanged when nothing
@@ -198,6 +202,8 @@ export function Review({ onPractice, onPracticeMany, onOpenSet, onDeleteSet }: P
           : f === 'logged' ? logged.has(i.id) && (!t || logged.get(i.id)!.includes(t))
             : true)))
   const shown = pick(filter, tag)
+  const filterLabel = filter === 'logged' && tag ? TAG_LABEL[tag]
+    : FILTERS.find(([f]) => f === filter)![1]
 
   const redo: { key: string; label: string; rows: SetItem[]; tag?: boolean }[] = [
     ...FILTERS.map(([f, label]) => ({ key: f, label, rows: pick(f, null) })),
@@ -300,6 +306,14 @@ export function Review({ onPractice, onPracticeMany, onOpenSet, onDeleteSet }: P
                 })()}
               </p>
             </div>
+            {/* Every row in this section under the current filter, in one go. */}
+            <button className="spanel-redo"
+                    onClick={() => onPracticeMany(
+                      group.days.flatMap((d) => d.rows.map((r) => r.id)),
+                      `Review: ${SECTION_LABEL[group.section]} · ${filterLabel}`)}>
+              Redo {group.days.reduce((sum, d) => sum + d.rows.length, 0)}
+              <Icon name="arrow-right" size={15} strokeWidth={2.4} />
+            </button>
           </header>
           {group.days.map((day) => (
             <div key={day.label} className="review-group">
@@ -320,7 +334,9 @@ export function Review({ onPractice, onPracticeMany, onOpenSet, onDeleteSet }: P
                       <span className="review-main">
                         <span className="review-skill">{item.skill_name}</span>
                         <span className="review-meta">
-                          {item.domain_name} · {DIFFICULTY[item.difficulty] ?? item.difficulty}
+                          {item.domain_name}
+                          {pt && typeOf(item.cb_id, pt) ? ` · ${typeOf(item.cb_id, pt)!.label}` : ''}
+                          {' · '}{DIFFICULTY[item.difficulty] ?? item.difficulty}
                         </span>
                       </span>
                       <span className="review-nums">
@@ -337,6 +353,7 @@ export function Review({ onPractice, onPracticeMany, onOpenSet, onDeleteSet }: P
                                       response={item.last_response}
                                       seconds={item.last_seconds ?? 0}
                                       onPractice={onPractice}
+                                      onPracticeMany={onPracticeMany}
                                       onLogged={markLogged} />
                     ) : null}
                   </li>
