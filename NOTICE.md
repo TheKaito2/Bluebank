@@ -63,5 +63,7 @@ Modified by TheKaito2 (https://github.com/TheKaito2). Changes include:
   process-types.json holds only ids and our type names). Review shows the type
   on each row, "Practice N similar" under each question, and a Redo button per
   section. Build script: scripts/process_types.py.
+- 2026-10-10: Home: ticking a skill shows its process types as chips, to
+  narrow that skill to one or more types.
 
 The full history of changes is in the git log.

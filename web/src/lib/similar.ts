@@ -33,6 +33,25 @@ export function typeOf(cbId: string | null | undefined, pt: ProcessTypes): Proce
   return pt.types[ref.slice(0, dot)]?.[ref.slice(dot + 1)] ?? null
 }
 
+/** Ref ("skill.key") -> how many questions have that type. */
+export function typeCounts(pt: ProcessTypes): Map<string, number> {
+  const n = new Map<string, number>()
+  for (const ref of Object.values(pt.q)) n.set(ref, (n.get(ref) ?? 0) + 1)
+  return n
+}
+
+/**
+ * Apply the Home type filter. A question is dropped only when its own skill has
+ * at least one type picked and its type is not one of them.
+ */
+export function filterByTypes<T extends Pick<SetItem, 'cb_id' | 'skill'>>(
+  items: T[], types: string[], pt: ProcessTypes,
+): T[] {
+  const picked = new Set(types)
+  const narrowed = new Set(types.map((r) => r.slice(0, r.lastIndexOf('.'))))
+  return items.filter((i) => !narrowed.has(i.skill) || (i.cb_id != null && picked.has(pt.q[i.cb_id])))
+}
+
 /** Below this many others of the same type, fall back to the whole skill. */
 const MIN_SAME_TYPE = 3
 

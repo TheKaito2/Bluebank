@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { similarTo, typeOf, type ProcessTypes } from './similar'
+import { filterByTypes, similarTo, typeOf, type ProcessTypes } from './similar'
 import type { SetItem } from '../types'
 
 function item(id: string, skill: string, band: number, last: number | null): SetItem {
@@ -37,5 +37,13 @@ describe('similarTo', () => {
 
   it('reads a skill code that itself contains dots', () => {
     expect(typeOf('cb-me', pt)?.label).toBe('Find the constant')
+  })
+})
+
+describe('filterByTypes', () => {
+  const pool = [item('a', 'H.A.', 4, null), item('z', 'H.A.', 4, null), item('q', 'P.A.', 4, null)]
+
+  it('narrows only the skill whose type was picked', () => {
+    expect(filterByTypes(pool, ['H.A..s'], pt).map((q) => q.id)).toEqual(['z', 'q'])
   })
 })

@@ -27,6 +27,7 @@ export function describeSet(set: PracticeSet): string {
   if (f.difficulties?.length) {
     parts.push(f.difficulties.map((d) => DIFF_NAME[d]).join(' and '))
   }
+  if (f.types?.length) parts.push(`${f.types.length} question type${f.types.length === 1 ? '' : 's'}`)
   if (f.excludeLive) parts.push('no practice-test questions')
   if (f.speed) parts.push(`${f.speed}x time`)
   return parts.join(' · ')

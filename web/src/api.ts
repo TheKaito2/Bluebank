@@ -23,6 +23,8 @@
  */
 import * as http from './apiHttp'
 import * as local from './apiLocal'
+import { filterByTypes, loadProcessTypes } from './lib/similar'
+import type { Filters } from './types'
 
 export type BackendName = 'http' | 'local'
 
@@ -37,7 +39,15 @@ export const backend: BackendName = choose()
 const impl = backend === 'local' ? local : http
 
 export const taxonomy = impl.taxonomy
-export const questionSet = impl.questionSet
+/** Both backends filter the rest; process types are applied here, once. */
+export async function questionSet(filters: Filters) {
+  const result = await impl.questionSet(filters)
+  if (!filters.types?.length) return result
+  const pt = await loadProcessTypes()
+  if (!pt) return result
+  const questions = filterByTypes(result.questions, filters.types, pt)
+  return { count: questions.length, questions }
+}
 export const question = impl.question
 export const answer = impl.answer
 export const flag = impl.flag

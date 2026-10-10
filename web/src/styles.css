@@ -2418,3 +2418,8 @@ a.tool { text-decoration: none; color: inherit; }
   .similar { grid-template-columns: 1fr; }
   .similar-go { grid-column: 1; grid-row: auto; margin-top: 10px; justify-self: start; }
 }
+
+/* ---- Home: process types under a ticked skill ---- */
+.sktypes { margin: 6px 0 10px 30px; gap: 6px; }
+.sktypes .chip { font-size: var(--fs-xs); padding: 5px 10px; }
+.sktypes .chip.on { background: var(--sec-600); border-color: var(--sec-600); color: #fff; }

@@ -3,6 +3,7 @@ import { Icon } from './Icon'
 import { Mascot } from './Mascot'
 import { FeedbackLink } from './Feedback'
 import { ProgressStrip } from './ProgressStrip'
+import { loadProcessTypes, typeCounts, type ProcessTypes } from '../lib/similar'
 import { SPEEDS, setSeconds, formatClock } from '../lib/pacing'
 import { describeSet } from '../lib/setlabel'
 import type { Order } from '../lib/order'
@@ -85,6 +86,11 @@ export function Home({
   const count = items.length
   const needle = query.trim().toLowerCase()
 
+  /** Process types, shown under a ticked skill to narrow it further. */
+  const [pt, setPt] = useState<ProcessTypes | null>(null)
+  useEffect(() => { void loadProcessTypes().then(setPt) }, [])
+  const ptCounts = useMemo(() => (pt ? typeCounts(pt) : null), [pt])
+
   // ID search: look across the whole bank once the ID is long enough to mean something.
   useEffect(() => {
     if (needle.length < 3) return
@@ -165,7 +171,11 @@ export function Home({
 
   function commit(next: Set<string>) {
     const doms = domains.filter((d) => d.skills.some((s) => next.has(s.code))).map((d) => d.code)
-    set(next.size ? { domains: doms, skills: [...next] } : { domains: undefined, skills: undefined })
+    // Unticking a skill drops its types too, or they would linger unseen.
+    const types = value.types?.filter((r) => next.has(r.slice(0, r.lastIndexOf('.'))))
+    set(next.size
+      ? { domains: doms, skills: [...next], types: types?.length ? types : undefined }
+      : { domains: undefined, skills: undefined, types: undefined })
   }
 
   function tickDomain(d: DomainRow) {
@@ -187,7 +197,11 @@ export function Home({
 
   const pickedSections = value.section ? [value.section]
     : [...new Set(domains.filter((d) => d.skills.some((s) => ticked.has(s.code))).map((d) => d.section))]
-  const pickedNames = domains.flatMap((d) => d.skills.filter((s) => ticked.has(s.code)).map((s) => s.name))
+  // A skill narrowed to types reads as those types.
+  const pickedNames = domains.flatMap((d) => d.skills.filter((s) => ticked.has(s.code)).flatMap((s) => {
+    const refs = value.types?.filter((r) => r.startsWith(`${s.code}.`)) ?? []
+    return refs.length && pt ? refs.map((r) => pt.types[s.code]?.[r.slice(s.code.length + 1)]?.label ?? s.name) : [s.name]
+  }))
   const summary = pickedNames.length
     ? pickedNames.length === 1 ? pickedNames[0] : `${pickedNames[0]} + ${pickedNames.length - 1} more`
     : value.section ? `All ${value.section === 'RW' ? 'Reading and Writing' : 'Math'}` : 'All topics'
@@ -296,7 +310,7 @@ export function Home({
             {tabs.map((t) => (
               <button key={t.label} aria-pressed={value.section === t.key}
                       className={`seg-b${t.key ? ` sec-${t.key}` : ''}${value.section === t.key ? ' on' : ''}`}
-                      onClick={() => onChange({ ...value, section: t.key, domains: undefined, skills: undefined })}>
+                      onClick={() => onChange({ ...value, section: t.key, domains: undefined, skills: undefined, types: undefined })}>
                 {t.key ? <Icon name={SECTION_ICON[t.key]} size={15} strokeWidth={2} /> : null}
                 {t.label}
               </button>
@@ -365,6 +379,20 @@ export function Home({
                                 : <span className="acc none">new</span>}
                               <span className="skbar"><span style={{ transform: `scaleX(${s.n ? s.seen / s.n : 0})` }} /></span>
                             </button>
+                            {sOn && pt?.types[s.code] ? (
+                              <div className="chips sktypes" role="group" aria-label={`${s.name}: question types`}>
+                                {Object.entries(pt.types[s.code]).map(([key, t]) => {
+                                  const ref = `${s.code}.${key}`
+                                  const tOn = value.types?.includes(ref) ?? false
+                                  return (
+                                    <button key={key} className={tOn ? 'chip on' : 'chip'} aria-pressed={tOn}
+                                            title={t.how} onClick={() => set({ types: toggle(value.types, ref) })}>
+                                      {t.label} <span className="chip-n">{ptCounts?.get(ref) ?? 0}</span>
+                                    </button>
+                                  )
+                                })}
+                              </div>
+                            ) : null}
                           </li>
                         )
                       })}

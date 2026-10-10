@@ -149,6 +149,11 @@ export interface Filters {
   skills?: string[]
   difficulties?: Difficulty[]
   statuses?: Status[]
+  /**
+   * Process types ("skill.key", see lib/similar.ts). Narrows only the skills
+   * it names: a skill with no type picked stays whole.
+   */
+  types?: string[]
   /** Drop questions that also appear on an official full-length practice test. */
   excludeLive?: boolean
   /**
